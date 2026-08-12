@@ -20,10 +20,10 @@ export default function RegisterPage() {
         localStorage.setItem('auth_token', res.data.token);
       }
       
-      toast.success('Account created successfully!');
+      toast.success('Account created successfully!', {id: 'register'});
       navigate('/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Registration failed');
+      toast.error(err.response?.data?.message || 'Registration failed', {id: 'register'});
     }
   };
 

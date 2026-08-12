@@ -12,10 +12,10 @@ export default function LoginPage() {
     try {
       const res = await axiosClient.post('/auth/login', data);
       localStorage.setItem('auth_token', res.data.token);
-      toast.success('Logged in successfully!');
+      toast.success('Logged in successfully!', {id: 'login'});
       navigate('/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Login failed');
+      toast.error(err.response?.data?.message || 'Login failed', {id: 'login'});
     }
   };
 

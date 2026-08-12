@@ -32,13 +32,13 @@ export function useCreateExpense() {
       return data;
     },
     onSuccess: () => {
-      toast.success('Expense added successfully!');
+      toast.success('Expense added successfully!', {id: 'add-expense'});
       // Refetch expenses list & dashboard metrics automatically
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] });
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Failed to add expense');
+      toast.error(error.response?.data?.message || 'Failed to add expense', {id: 'add-expense'});
     },
   });
 }
@@ -55,12 +55,12 @@ export function useUpdateExpense() {
       return data;
     },
     onSuccess: () => {
-      toast.success('Expense updated successfully!');
+      toast.success('Expense updated successfully!', {id: 'update-expense'});
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] });
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Failed to update expense');
+      toast.error(error.response?.data?.message || 'Failed to update expense', {id: 'update-expense'});
     },
   });
 }
@@ -77,12 +77,12 @@ export function useDeleteExpense() {
       return data;
     },
     onSuccess: () => {
-      toast.success('Expense deleted successfully!');
+      toast.success('Expense deleted successfully!', {id: 'delete-expense'});
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] });
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Failed to delete expense');
+      toast.error(error.response?.data?.message || 'Failed to delete expense', {id: 'delete-expense'});
     },
   });
 }

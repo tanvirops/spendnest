@@ -4,6 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import CreatableSelect from 'react-select/creatable';
 import { FiX } from 'react-icons/fi';
 import { useCreateExpense } from '../../hooks/useExpenses';
+import toast from 'react-hot-toast';
 
 const DEFAULT_CATEGORIES = [
   { value: 'Food', label: 'Food' },
@@ -32,6 +33,7 @@ export default function AddExpenseModal({ isOpen, onRequestClose }) {
       onSuccess: () => {
         reset();
         onRequestClose();
+        toast.success('Expense added successfully', {id: 'add-expense'});
       }
     });
   };

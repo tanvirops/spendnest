@@ -22,11 +22,11 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
     if (!window.confirm('Are you sure you want to delete this expense?')) return;
     try {
       await axiosClient.delete(`/expenses/${id}`);
-      toast.success('Expense deleted successfully');
+      toast.success('Expense deleted successfully', {id: 'delete-expense'});
       queryClient.invalidateQueries(['expenses']);
       queryClient.invalidateQueries(['dashboard-summary']);
     } catch (err) {
-      toast.error('Failed to delete expense');
+      toast.error('Failed to delete expense', {id: 'delete-expense'});
     }
   };
 

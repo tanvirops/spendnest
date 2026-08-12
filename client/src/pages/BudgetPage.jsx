@@ -63,7 +63,7 @@ export default function BudgetPage() {
       return data.data;
     },
     onSuccess: () => {
-      toast.success('Budget created successfully!');
+      toast.success('Budget created successfully!', {id: 'create-budget'});
       queryClient.invalidateQueries(['budgets']);
       queryClient.invalidateQueries(['dashboard-summary']);
       reset();
@@ -71,7 +71,7 @@ export default function BudgetPage() {
       setIsBudgetModalOpen(false);
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Failed to create budget');
+      toast.error(error.response?.data?.message || 'Failed to create budget', {id: 'create-budget'});
     },
   });
 
@@ -81,7 +81,7 @@ export default function BudgetPage() {
       return data.data;
     },
     onSuccess: () => {
-      toast.success('Budget updated successfully!');
+      toast.success('Budget updated successfully!', {id: 'update-budget'});
       queryClient.invalidateQueries(['budgets']);
       queryClient.invalidateQueries(['dashboard-summary']);
       reset();
@@ -89,7 +89,7 @@ export default function BudgetPage() {
       setIsBudgetModalOpen(false);
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Failed to update budget');
+      toast.error(error.response?.data?.message || 'Failed to update budget', {id: 'update-budget'});
     },
   });
 
@@ -98,14 +98,14 @@ export default function BudgetPage() {
       await axiosClient.delete(`/budgets/${id}`);
     },
     onSuccess: () => {
-      toast.success('Budget deleted successfully!');
+      toast.success('Budget deleted successfully!', {id: 'delete-budget'});
       queryClient.invalidateQueries(['budgets']);
       queryClient.invalidateQueries(['dashboard-summary']);
       setEditingBudgetId(null);
       reset();
     },
     onError: (error) => {
-      toast.error(error.response?.data?.message || 'Failed to delete budget');
+      toast.error(error.response?.data?.message || 'Failed to delete budget', {id: 'delete-budget'});
     },
   });
 
@@ -161,7 +161,7 @@ export default function BudgetPage() {
 
   const handleDelete = async (budget) => {
     if (budget.isActive) {
-      toast.error('Cannot delete an active budget. Deactivate it first.');
+      toast.error('Cannot delete an active budget. Deactivate it first.' , {id: 'delete-budget'});
       return;
     }
     if (!window.confirm('Delete this budget?')) return;
