@@ -6,6 +6,8 @@ import { Toaster } from 'react-hot-toast';
 import Modal from 'react-modal';
 import App from './App';
 import './index.css';
+// disable verbose console in production
+import './utils/disableConsoleProd';
 
 // Set root element for React Modal accessibility
 Modal.setAppElement('#root');

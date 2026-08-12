@@ -85,11 +85,19 @@ router.get('/google', passport.authenticate('google', { scope: ['profile', 'emai
 // Google OAuth Callback
 router.get(
   '/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: '/login' }),
+  passport.authenticate('google', { session: false, failureRedirect: `${process.env.CLIENT_URL}/oauth/success?error=1` }),
   (req, res) => {
-    const token = generateToken(req.user);
-    // Redirect to frontend with JWT in query params
-    res.redirect(`${process.env.CLIENT_URL}/oauth/success?token=${token}`);
+    try {
+      console.log('Google callback - req.user:', req.user ? { id: req.user._id, email: req.user.email } : null);
+      const token = generateToken(req.user);
+      const masked = token ? `${token.slice(0, 8)}...` : 'no-token';
+      console.log('Google callback - generated token:', masked);
+      // Redirect to frontend with JWT in query params
+      res.redirect(`${process.env.CLIENT_URL}/oauth/success?token=${token}`);
+    } catch (err) {
+      console.error('Google callback error:', err.message);
+      res.redirect(`${process.env.CLIENT_URL}/oauth/success?error=1`);
+    }
   }
 );
 

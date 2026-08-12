@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
-dotenv.config();
+// Ensure environment variables are loaded before any other module
+import './env.js';
 
 import express from 'express';
 import mongoose from 'mongoose';
@@ -22,6 +22,14 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(passport.initialize());
+
+// Diagnostic log: check passport strategies
+try {
+  const hasGoogle = !!(passport._strategy && passport._strategy('google'));
+  console.log(`Passport google strategy present: ${hasGoogle}`);
+} catch (e) {
+  console.log('Passport strategy check failed', e.message);
+}
 
 // Authentication Routes
 app.use('/api/auth', authRoutes);
