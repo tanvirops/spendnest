@@ -10,9 +10,13 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [sort, setSort] = useState('newest');
+  const [page, setPage] = useState(1);
+  const [limit] = useState(10);
 
   const queryClient = useQueryClient();
-  const { data: expenses = [], isLoading } = useExpenses({ search, category, sort });
+  const { data: expensesResult = { items: [], pagination: { page: 1, limit: 10, total: 0 } }, isLoading } = useExpenses({ search, category, sort, page, limit });
+  const expenses = expensesResult.items || [];
+  const pagination = expensesResult.pagination || { page: 1, limit: 10, total: 0 };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this expense?')) return;
@@ -78,9 +82,38 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
         </select>
       </div>
 
-      {/* Expenses Table */}
-      <div className="rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950 overflow-hidden shadow-sm">
-        <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
+      {/* Mobile list view */}
+      <div className="md:hidden space-y-4">
+        {isLoading ? (
+          <div className="p-4 text-sm text-slate-500">Loading...</div>
+        ) : expenses.length > 0 ? (
+          expenses.map((exp) => (
+            <div key={exp._id} className="p-4 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-sm font-semibold text-slate-900 dark:text-white">{exp.name}</span>
+                    <CategoryBadge category={exp.category} />
+                  </div>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">${exp.amount}</p>
+                  <p className="text-xs text-slate-400 mt-1">{new Date(exp.expenseDate).toISOString().slice(0,10)}</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <button onClick={() => handleDelete(exp._id)} className="p-2 rounded-full text-rose-600 bg-rose-50 dark:bg-transparent">
+                    <FiTrash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <div className="p-4 text-sm text-slate-500">No expenses recorded.</div>
+        )}
+      </div>
+
+      {/* Desktop table view */}
+      <div className="hidden md:block rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950 overflow-x-auto shadow-sm">
+        <table className="min-w-[640px] w-full text-left text-sm text-slate-600 dark:text-slate-300">
           <thead className="bg-slate-50 dark:bg-slate-900 text-xs text-slate-500 uppercase border-b border-slate-100 dark:border-slate-900">
             <tr>
               <th className="px-6 py-3 font-semibold">Name</th>
@@ -110,6 +143,19 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Pagination controls */}
+      <div className="flex items-center justify-between mt-4">
+        <div className="text-sm text-slate-500">Showing {(pagination.page - 1) * pagination.limit + 1} - {Math.min(pagination.page * pagination.limit, pagination.total)} of {pagination.total}</div>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={pagination.page <= 1} className="px-3 py-1 rounded-lg border bg-white disabled:opacity-50">
+            Prev
+          </button>
+          <button onClick={() => setPage((p) => p + 1)} disabled={pagination.page * pagination.limit >= pagination.total} className="px-3 py-1 rounded-lg border bg-white disabled:opacity-50">
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

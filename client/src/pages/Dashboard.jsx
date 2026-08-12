@@ -35,10 +35,10 @@ const formatDate = (dateStr) => {
 
 export default function Dashboard({ onOpenAddExpenseModal }) {
   // Fetch Dashboard Analytics Summary
-  const { data: summaryData, isLoading: isSummaryLoading, isError: isSummaryError } = useQuery({
+  const { data: summaryData, isLoading: isSummaryLoading, isError: isSummaryError, error: summaryError } = useQuery({
     queryKey: ['dashboard-summary'],
     queryFn: async () => {
-      const { data } = await axiosClient.get('/expenses/summary');
+      const { data } = await axiosClient.get('/expenses/dashboard');
       return data?.data;
     },
     refetchInterval: 30000,
@@ -94,9 +94,13 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
   };
 
   if (isSummaryError) {
+    const errorMessage =
+      summaryError?.response?.data?.message ||
+      'Failed to load dashboard metrics. Please check your connection or backend API response.';
+
     return (
       <div className="p-6 bg-rose-50 dark:bg-rose-950/30 border border-rose-200 dark:border-rose-900 rounded-xl text-rose-700 dark:text-rose-400 text-sm">
-        Failed to load dashboard metrics. Please check your connection or backend API response.
+        {errorMessage}
       </div>
     );
   }

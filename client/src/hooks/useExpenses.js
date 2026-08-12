@@ -10,7 +10,11 @@ export function useExpenses(params = {}) {
     queryKey: ['expenses', params],
     queryFn: async () => {
       const { data } = await axiosClient.get('/expenses', { params });
-      return data?.data || data || [];
+      // server returns { success, data: items, pagination }
+      return {
+        items: data?.data || [],
+        pagination: data?.pagination || { page: 1, limit: 10, total: (data?.data || []).length }
+      };
     },
     keepPreviousData: true,
   });

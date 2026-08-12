@@ -14,8 +14,8 @@ export default function ProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await axiosClient.get('/auth/me');
-        setUser(res.data);
+        const res = await axiosClient.get('/profile');
+        setUser(res.data.data);
       } catch (err) {
         toast.error('Failed to load profile details');
       } finally {
@@ -27,7 +27,7 @@ export default function ProfilePage() {
 
   const onChangePassword = async (data) => {
     try {
-      await axiosClient.put('/auth/change-password', data);
+      await axiosClient.post('/profile/change-password', data);
       toast.success('Password updated successfully!');
       reset();
     } catch (err) {

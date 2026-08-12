@@ -14,6 +14,7 @@ import BudgetPage from './pages/BudgetPage';
 import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import OAuthSuccess from './pages/OAuthSuccess';
 
 // Auth Guard: টোকেন না থাকলে সরাসরি Login পেজে পাঠিয়ে দেবে
 const ProtectedRoute = ({ children }) => {
@@ -56,6 +57,7 @@ export default function App() {
         {/* পাবলিক পেজ (Authentication) */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
+        <Route path="/oauth/success" element={<OAuthSuccess />} />
 
         {/* প্রোটেক্টেড অ্যাপ্লিকেশনের পেজসমূহ (মেম্বারদের জন্য) */}
         <Route
