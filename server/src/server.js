@@ -5,13 +5,13 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import passport from 'passport';
+import './config/passport.js';
 import authRoutes from './routes/auth.js';
 import expenseRoutes from './routes/expense.js';
 import budgetRoutes from './routes/budget.js';
 import savingRoutes from './routes/saving.js';
 import profileRoutes from './routes/profile.js';
 import { authenticateJWT, requireVerifiedEmail } from './middleware/auth.js';
-import './config/passport.js';
 
 const app = express();
 

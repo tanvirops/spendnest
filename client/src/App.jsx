@@ -33,7 +33,6 @@ export default function App() {
 
   return (
     <>
-      {/* গ্লোবাল টোস্ট নোটিফিকেশন কনফিগারেশন */}
       <Toaster 
         position="top-right" 
         toastOptions={{ 
@@ -47,19 +46,15 @@ export default function App() {
         }} 
       />
 
-      {/* গ্লোবাল Expense যোগ করার পপআপ মোডাল */}
       <AddExpenseModal 
         isOpen={isExpenseModalOpen} 
         onRequestClose={handleCloseExpenseModal} 
       />
 
       <Routes>
-        {/* পাবলিক পেজ (Authentication) */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/oauth/success" element={<OAuthSuccess />} />
-
-        {/* প্রোটেক্টেড অ্যাপ্লিকেশনের পেজসমূহ (মেম্বারদের জন্য) */}
         <Route
           path="/"
           element={
@@ -103,8 +98,6 @@ export default function App() {
             </ProtectedRoute>
           }
         />
-
-        {/* ভুল ইউআরএল দিলে ড্যাশবোর্ডে রিডাইরেক্ট করবে */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
