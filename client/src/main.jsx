@@ -6,6 +6,22 @@ import { Toaster } from 'react-hot-toast';
 import Modal from 'react-modal';
 import App from './App';
 import './index.css';
+// PWA: register service worker (auto-update)
+import { registerSW } from 'virtual:pwa-register';
+if ('serviceWorker' in navigator) {
+  try {
+    registerSW({
+      onRegistered(r) {
+        console.log('Service worker registered:', r);
+      },
+      onRegisterError(err) {
+        console.error('SW registration error:', err);
+      }
+    });
+  } catch (e) {
+    console.warn('PWA registerSW unavailable', e.message);
+  }
+}
 // disable verbose console in production
 import './utils/disableConsoleProd';
 
