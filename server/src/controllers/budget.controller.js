@@ -42,14 +42,26 @@ export const getBudgetById = async (req, res) => {
 // Create budget
 export const createBudget = async (req, res) => {
   try {
-    const { type, amount, fromEffective, toEffective } = req.body;
+    const { type, amount, fromEffective, toEffective, isActive } = req.body;
 
     if (!type || amount === undefined || !fromEffective || !toEffective) {
       return res.status(400).json({ success: false, message: 'Missing required fields' });
     }
 
-    // Deactivate other active budgets for this user
-    if (type === 'default' || type === 'monthly') {
+    const startDate = new Date(fromEffective);
+    const endDate = new Date(toEffective);
+
+    if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+      return res.status(400).json({ success: false, message: 'Invalid date format' });
+    }
+
+    if (startDate > endDate) {
+      return res.status(400).json({ success: false, message: 'fromEffective must be before toEffective' });
+    }
+
+    const active = isActive !== false;
+
+    if (active) {
       await Budget.updateMany(
         { userId: req.user.id, type, isActive: true },
         { isActive: false }
@@ -60,9 +72,9 @@ export const createBudget = async (req, res) => {
       userId: req.user.id,
       type,
       amount: Number(amount),
-      fromEffective: new Date(fromEffective),
-      toEffective: new Date(toEffective),
-      isActive: true
+      fromEffective: startDate,
+      toEffective: endDate,
+      isActive: active
     });
 
     await budget.save();
@@ -84,7 +96,27 @@ export const updateBudget = async (req, res) => {
     if (amount !== undefined) budget.amount = Number(amount);
     if (fromEffective !== undefined) budget.fromEffective = new Date(fromEffective);
     if (toEffective !== undefined) budget.toEffective = new Date(toEffective);
-    if (isActive !== undefined) budget.isActive = isActive;
+
+    if (fromEffective !== undefined || toEffective !== undefined) {
+      const startDate = fromEffective !== undefined ? new Date(fromEffective) : budget.fromEffective;
+      const endDate = toEffective !== undefined ? new Date(toEffective) : budget.toEffective;
+      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+        return res.status(400).json({ success: false, message: 'Invalid date format' });
+      }
+      if (startDate > endDate) {
+        return res.status(400).json({ success: false, message: 'fromEffective must be before toEffective' });
+      }
+    }
+
+    if (isActive !== undefined) {
+      if (isActive && !budget.isActive) {
+        await Budget.updateMany(
+          { userId: req.user.id, type: budget.type, isActive: true, _id: { $ne: budget._id } },
+          { isActive: false }
+        );
+      }
+      budget.isActive = isActive;
+    }
 
     await budget.save();
     res.json({ success: true, data: budget });
@@ -96,8 +128,12 @@ export const updateBudget = async (req, res) => {
 // Delete budget
 export const deleteBudget = async (req, res) => {
   try {
-    const budget = await Budget.findOneAndDelete({ _id: req.params.id, userId: req.user.id });
+    const budget = await Budget.findOne({ _id: req.params.id, userId: req.user.id });
     if (!budget) return res.status(404).json({ success: false, message: 'Budget not found' });
+    if (budget.isActive) {
+      return res.status(400).json({ success: false, message: 'Cannot delete an active budget. Deactivate it first.' });
+    }
+    await budget.deleteOne();
     res.json({ success: true, message: 'Budget deleted successfully' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

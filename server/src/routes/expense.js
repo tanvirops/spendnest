@@ -7,12 +7,12 @@ import {
   updateExpense,
   deleteExpense
 } from '../controllers/expense.controller.js';
-import { authenticateJWT, requireVerifiedEmail } from '../middleware/auth.js';
+import { authenticateJWT } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// All expense routes require authentication and email verification
-router.use(authenticateJWT, requireVerifiedEmail);
+// All expense routes require authentication
+router.use(authenticateJWT);
 
 // Dashboard summary
 router.get('/dashboard', getDashboardSummary);

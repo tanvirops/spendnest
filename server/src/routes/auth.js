@@ -4,6 +4,8 @@ import jwt from 'jsonwebtoken';
 import crypto from 'crypto';
 import passport from 'passport';
 import User from '../models/User.js';
+import { authenticateJWT } from '../middleware/auth.js';
+import { getProfile, changePassword } from '../controllers/profile.controller.js';
 
 const router = express.Router();
 
@@ -90,5 +92,9 @@ router.get(
     res.redirect(`${process.env.CLIENT_URL}/oauth/success?token=${token}`);
   }
 );
+
+// Profile endpoint aliases
+router.get('/me', authenticateJWT, getProfile);
+router.post('/change-password', authenticateJWT, changePassword);
 
 export default router;

@@ -7,12 +7,12 @@ import {
   updateBudget,
   deleteBudget
 } from '../controllers/budget.controller.js';
-import { authenticateJWT, requireVerifiedEmail } from '../middleware/auth.js';
+import { authenticateJWT } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// All budget routes require authentication and email verification
-router.use(authenticateJWT, requireVerifiedEmail);
+// All budget routes require authentication
+router.use(authenticateJWT);
 
 // Get all budgets
 router.get('/', getBudgets);

@@ -6,12 +6,12 @@ import {
   upsertSaving,
   deleteSaving
 } from '../controllers/saving.controller.js';
-import { authenticateJWT, requireVerifiedEmail } from '../middleware/auth.js';
+import { authenticateJWT } from '../middleware/auth.js';
 
 const router = express.Router();
 
-// All saving routes require authentication and email verification
-router.use(authenticateJWT, requireVerifiedEmail);
+// All saving routes require authentication
+router.use(authenticateJWT);
 
 // Get all savings (with optional year/month filter)
 router.get('/', getSavings);

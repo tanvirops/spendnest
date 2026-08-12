@@ -6,7 +6,7 @@ import {
   deleteAccount,
   updateEmail
 } from '../controllers/profile.controller.js';
-import { authenticateJWT, requireVerifiedEmail } from '../middleware/auth.js';
+import { authenticateJWT } from '../middleware/auth.js';
 
 const router = express.Router();
 
