@@ -99,3 +99,5 @@ EOL
     run_sudo nginx -t
     run_sudo systemctl reload nginx
 fi
+echo "Deployment completed successfully."
+echo "Access your application at: https://${EXPENSE_TRACKER_DOMAIN}"
