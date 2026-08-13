@@ -4,7 +4,10 @@ set -e
 echo "Current User: $(whoami)"
 echo "Workspace: $(pwd)"
 
-SUDO_CMD="echo \"$SHINE32_PASSWORD\" | sudo -S"
+# Helper function to execute sudo commands non-interactively
+run_sudo() {
+    echo "$SHINE32_PASSWORD" | sudo -S "$@"
+}
 
 # 1. Docker Images Build
 docker-compose down || true
@@ -13,10 +16,13 @@ docker-compose up -d
 docker ps | grep expense-* || true
 echo "Docker containers are up and running."
 
+run_sudo rm /etc/nginx/sites-available/expense.tanvirops.xyz
+run_sudo rm /etc/nginx/sites-enabled/expense.tanvirops.xyz
+
 # 2. SSL Directory Setup
 if [ ! -d "/etc/ssl/cloudflare" ]; then
     echo "Creating Cloudflare SSL directory..."
-    eval $SUDO_CMD mkdir -p /etc/ssl/cloudflare
+    run_sudo mkdir -p /etc/ssl/cloudflare
 fi
 
 # 3. Check and Write Cloudflare SSL Certificates
@@ -25,11 +31,11 @@ KEY_PATH="/etc/ssl/cloudflare/${EXPENSE_TRACKER_DOMAIN}.key"
 
 if [ ! -f "$CERT_PATH" ] || [ ! -f "$KEY_PATH" ]; then
     echo "Writing Cloudflare SSL Certificate and Private Key..."
-    echo "$EXPENSE_CLOUDFLARE_CERT" | eval $SUDO_CMD tee "$CERT_PATH" > /dev/null
-    echo "$EXPENSE_CLOUDFLARE_KEY" | eval $SUDO_CMD tee "$KEY_PATH" > /dev/null
+    echo "$CLOUDFLARE_CERT" | run_sudo tee "$CERT_PATH" > /dev/null
+    echo "$CLOUDFLARE_KEY" | run_sudo tee "$KEY_PATH" > /dev/null
     
-    eval $SUDO_CMD chmod 600 "$KEY_PATH"
-    eval $SUDO_CMD chmod 644 "$CERT_PATH"
+    run_sudo chmod 600 "$KEY_PATH"
+    run_sudo chmod 644 "$CERT_PATH"
 else
     echo "Cloudflare SSL certificate and key already exist."
 fi
@@ -40,12 +46,13 @@ NGINX_LINK="/etc/nginx/sites-enabled/${EXPENSE_TRACKER_DOMAIN}"
 
 if [ -f "$NGINX_CONF" ]; then
     echo "Nginx configuration already exists. Validating and reloading..."
-    eval $SUDO_CMD nginx -t
-    eval $SUDO_CMD systemctl reload nginx
+    run_sudo nginx -t
+    run_sudo systemctl reload nginx
 else
     echo "Creating Nginx configuration for ${EXPENSE_TRACKER_DOMAIN}..."
     
-    eval $SUDO_CMD tee "$NGINX_CONF" > /dev/null <<EOL
+    # Write the heredoc using run_sudo tee
+    run_sudo tee "$NGINX_CONF" > /dev/null <<EOL
 server {
     listen 80;
     server_name ${EXPENSE_TRACKER_DOMAIN} www.${EXPENSE_TRACKER_DOMAIN};
@@ -79,7 +86,7 @@ server {
 }
 EOL
 
-    eval $SUDO_CMD ln -sf "$NGINX_CONF" "$NGINX_LINK"
-    eval $SUDO_CMD nginx -t
-    eval $SUDO_CMD systemctl reload nginx
+    run_sudo ln -sf "$NGINX_CONF" "$NGINX_LINK"
+    run_sudo nginx -t
+    run_sudo systemctl reload nginx
 fi

@@ -76,6 +76,7 @@ jobs:
         run: |
           pwd
           echo "$EXPENSE_TRACKER_DIR"
+          rm -f deploy.sh
           cp example.deploy.sh deploy.sh
           chmod +x deploy.sh
           ./deploy.sh
