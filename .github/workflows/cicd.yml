@@ -46,24 +46,35 @@ jobs:
       - name: Run server tests
         working-directory: ./server
         run: npm test --if-present
+
   Deploy:
     runs-on: self-hosted
     needs: [test-client, test-server]
+    env:
+      SHINE32_PASSWORD: ${{ secrets.SHINE32_PASSWORD }}
+      EXPENSE_TRACKER_DIR: ${{ vars.EXPENSE_TRACKER_DIR }}
+      EXPENSE_TRACKER_DOMAIN: ${{ vars.EXPENSE_TRACKER_DOMAIN }}
+      EXPENSE_CLOUDFLARE_CERT: ${{ vars.EXPENSE_TANVIR_CLOUDFLARE_CERTIFICATE }}
+      EXPENSE_CLOUDFLARE_KEY: ${{ vars.EXPENSE_TANVIR_CLOUDFLARE_PRIVATE_KEY }}
     steps:
       - name: Check App Directory Exist Or Not 
         run: |
-          if [ ! -d "${{vars.EXPENSE_TRACKER_DIR}}" ]; then
-            echo "Directory ${{vars.EXPENSE_TRACKER_DIR}} does not exist. Creating it..."
-            sudo mkdir -p "${{vars.EXPENSE_TRACKER_DIR}}"
-            sudo chown -R shine32:shine32 /var/www/expense-tracker
+          if [ ! -d "$EXPENSE_TRACKER_DIR" ]; then
+            echo "Directory $EXPENSE_TRACKER_DIR does not exist. Creating it..."
+            echo "$SHINE32_PASSWORD" | sudo -S mkdir -p "$EXPENSE_TRACKER_DIR"
+            echo "$SHINE32_PASSWORD" | sudo -S chown -R shine32:shine32 "$EXPENSE_TRACKER_DIR"
+            cd "$EXPENSE_TRACKER_DIR"
+            git clone git@github.com:Tanvir-Alam625/expense-tracker.git .
           else
-            echo "Directory ${{vars.EXPENSE_TRACKER_DIR}} already exists."
+            echo "Directory $EXPENSE_TRACKER_DIR already exists."
+            cd "$EXPENSE_TRACKER_DIR"
+            git pull origin main
           fi
+
       - name: Deploy Configuration
-        working-directory: ${{vars.EXPENSE_TRACKER_DIR}}
+        working-directory: ${{ vars.EXPENSE_TRACKER_DIR }}
         run: |
           pwd
-          echo ${{vars.EXPENSE_TRACKER_DIR}}
+          echo "$EXPENSE_TRACKER_DIR"
           chmod +x deploy.sh
           ./deploy.sh
-      
