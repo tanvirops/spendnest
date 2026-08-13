@@ -50,28 +50,10 @@ jobs:
     runs-on: self-hosted
     needs: [test-client, test-server]
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Sync Project 
-        run: |
-          pwd
-          cd ${{vars.LOTTIEICON_WORKSPACE}}
-          whoami
-          hostname
-          pwd
-          ls -la
-      - name: Build Docker Images
-        working-directory: ${{vars.LOTTIEICON_WORKSPACE}}
-        run: |
-          set -e
-          echo "Building Docker images..."
-          docker-compose down || true
-          docker-compose build
-          docker-compose up -d
-          docker ps grep expense-*
-          echo "Docker images built and containers started successfully."
       - name: Deploy Configuration
         working-directory: ${{vars.LOTTIEICON_WORKSPACE}}
         run: |
+          pwd
+          echo ${{vars.LOTTIEICON_WORKSPACE}}
           chmod +x deploy.sh
-          ./deploy.sh
+      
