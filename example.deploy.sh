@@ -29,15 +29,72 @@ fi
 CERT_PATH="/etc/ssl/cloudflare/${EXPENSE_TRACKER_DOMAIN}.crt"
 KEY_PATH="/etc/ssl/cloudflare/${EXPENSE_TRACKER_DOMAIN}.key"
 
+# Helper: write, validate and move cert/key
+write_and_validate_file() {
+    local input_var="$1"    # raw env var name
+    local input_b64_var="$2" # base64 env var name
+    local tmpfile="$3"
+    local destfile="$4"
+    local validate_type="$5" # 'cert' or 'key'
+
+    # Prefer base64-encoded secret if provided (preserves newlines in CI)
+    if [ -n "${!input_b64_var}" ]; then
+        echo "Decoding base64 secret for $destfile"
+        printf '%s' "${!input_b64_var}" | base64 -d > "$tmpfile"
+    else
+        printf '%s' "${!input_var}" > "$tmpfile"
+    fi
+
+    # Basic checks
+    if [ "$validate_type" = 'cert' ]; then
+        if ! openssl x509 -in "$tmpfile" -noout >/dev/null 2>&1; then
+            echo "ERROR: Certificate at $tmpfile is not a valid PEM certificate or is truncated."
+            echo "Please ensure the secret contains the full certificate including '-----BEGIN CERTIFICATE-----' and the chain if required."
+            rm -f "$tmpfile"
+            return 1
+        fi
+    else
+        # Try modern pkey parser first, then rsa fallback
+        if ! openssl pkey -in "$tmpfile" -noout >/dev/null 2>&1; then
+            if ! openssl rsa -in "$tmpfile" -check -noout >/dev/null 2>&1; then
+                echo "ERROR: Private key at $tmpfile is not a valid PEM private key."
+                rm -f "$tmpfile"
+                return 1
+            fi
+        fi
+    fi
+
+    # Move into place as root
+    run_sudo mv "$tmpfile" "$destfile"
+    run_sudo chown root:root "$destfile"
+    if [ "$validate_type" = 'key' ]; then
+        run_sudo chmod 600 "$destfile"
+    else
+        run_sudo chmod 644 "$destfile"
+    fi
+
+    return 0
+}
+
 if [ ! -f "$CERT_PATH" ] || [ ! -f "$KEY_PATH" ]; then
     echo "Writing Cloudflare SSL Certificate and Private Key..."
-    echo "$CLOUDFLARE_CERT" | run_sudo tee "$CERT_PATH" > /dev/null
-    echo "$CLOUDFLARE_KEY" | run_sudo tee "$KEY_PATH" > /dev/null
-    
-    run_sudo chmod 600 "$KEY_PATH"
-    run_sudo chmod 644 "$CERT_PATH"
+
+    TMP_CERT="/tmp/${EXPENSE_TRACKER_DOMAIN}.crt"
+    TMP_KEY="/tmp/${EXPENSE_TRACKER_DOMAIN}.key"
+
+    write_and_validate_file CLOUDFLARE_CERT CLOUDFLARE_CERT_B64 "$TMP_CERT" "$CERT_PATH" cert || exit 1
+    write_and_validate_file CLOUDFLARE_KEY CLOUDFLARE_KEY_B64 "$TMP_KEY" "$KEY_PATH" key || exit 1
+
 else
     echo "Cloudflare SSL certificate and key already exist."
+fi
+
+# Helpful diagnostic for CA chain issues
+if [ -f "$CERT_PATH" ]; then
+    echo "Checking certificate chain for $CERT_PATH"
+    if ! openssl x509 -in "$CERT_PATH" -noout -text >/dev/null 2>&1; then
+        echo "Warning: opened certificate but might be missing chain or issuer info. If clients report trust issues or nginx warns about ssl_stapling, upload the fullchain (certificate followed by issuer(s))."
+    fi
 fi
 
 # 4. Nginx Configuration Setup
