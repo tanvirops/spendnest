@@ -50,9 +50,10 @@ if [ -f "$NGINX_CONF" ]; then
     run_sudo systemctl reload nginx
 else
     echo "Creating Nginx configuration for ${EXPENSE_TRACKER_DOMAIN}..."
-    
-    # Write the heredoc using run_sudo tee
-    run_sudo tee "$NGINX_CONF" > /dev/null <<EOL
+
+    # Create nginx config in a temporary file then move it into place with sudo
+    TMP_CONF="/tmp/expense-nginx-${EXPENSE_TRACKER_DOMAIN}.conf"
+    cat > "$TMP_CONF" <<EOL
 server {
     listen 80;
     server_name ${EXPENSE_TRACKER_DOMAIN} www.${EXPENSE_TRACKER_DOMAIN};
@@ -85,6 +86,11 @@ server {
     }
 }
 EOL
+
+    # Move into place as root and set permissions
+    run_sudo mv "$TMP_CONF" "$NGINX_CONF"
+    run_sudo chown root:root "$NGINX_CONF"
+    run_sudo chmod 644 "$NGINX_CONF"
 
     run_sudo ln -sf "$NGINX_CONF" "$NGINX_LINK"
     run_sudo nginx -t
