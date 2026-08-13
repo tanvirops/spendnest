@@ -65,9 +65,9 @@ jobs:
         run: |
           set -e
           echo "Building Docker images..."
-          docker compose down || true
-          docker compose build
-          docker compose up -d
+          docker-compose down || true
+          docker-compose build
+          docker-compose up -d
           docker ps grep expense-*
           echo "Docker images built and containers started successfully."
       - name: Deploy Configuration
