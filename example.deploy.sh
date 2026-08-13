@@ -16,8 +16,6 @@ docker-compose up -d
 docker ps | grep expense-* || true
 echo "Docker containers are up and running."
 
-run_sudo rm /etc/nginx/sites-available/expense.tanvirops.xyz
-run_sudo rm /etc/nginx/sites-enabled/expense.tanvirops.xyz
 
 # 2. SSL Directory Setup
 if [ ! -d "/etc/ssl/cloudflare" ]; then
@@ -48,7 +46,6 @@ fi
 
 # 4. Nginx Configuration Setup
 NGINX_CONF="/etc/nginx/sites-available/${EXPENSE_TRACKER_DOMAIN}"
-NGINX_LINK="/etc/nginx/sites-enabled/${EXPENSE_TRACKER_DOMAIN}"
 
 if [ -f "$NGINX_CONF" ]; then
     echo "Nginx configuration already exists. Validating and reloading..."
@@ -98,7 +95,7 @@ EOL
     run_sudo chown root:root "$NGINX_CONF"
     run_sudo chmod 644 "$NGINX_CONF"
 
-    run_sudo ln -sf "$NGINX_CONF" "$NGINX_LINK"
+    run_sudo ln -sf "$NGINX_CONF" /etc/nginx/sites-enabled/
     run_sudo nginx -t
     run_sudo systemctl reload nginx
 fi
