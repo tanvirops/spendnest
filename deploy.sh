@@ -32,7 +32,7 @@ set -e
             sudo systemctl reload nginx
           else
             # Create a new Nginx configuration file
-            echo "Creating Nginx configuration for ${EXPENSE_TRACKER_DOMAIN}"
+            echo "Creating Nginx configuration for ${EXPENSE_TRACKER_DOMAIN} ..."
             sudo tee /etc/nginx/sites-available/${EXPENSE_TRACKER_DOMAIN} > /dev/null <<EOL
              server {
                 listen 80;
@@ -70,5 +70,5 @@ set -e
             sudo ln -s /etc/nginx/sites-available/${EXPENSE_TRACKER_DOMAIN} /etc/nginx/sites-enabled/
             # Test Nginx configuration
             sudo nginx -t
-            # Reload Nginx to apply changes
+            # Reload Nginx to apply changes.
             sudo systemctl reload nginx
