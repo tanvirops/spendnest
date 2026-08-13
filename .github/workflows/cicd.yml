@@ -54,7 +54,7 @@ jobs:
         run: |
           if [ ! -d "${{vars.EXPENSE_TRACKER_DIR}}" ]; then
             echo "Directory ${{vars.EXPENSE_TRACKER_DIR}} does not exist. Creating it..."
-            mkdir -p "${{vars.EXPENSE_TRACKER_DIR}}"
+            sudo mkdir -p "${{vars.EXPENSE_TRACKER_DIR}}"
             sudo chown -R shine32:shine32 /var/www/expense-tracker
           else
             echo "Directory ${{vars.EXPENSE_TRACKER_DIR}} already exists."
