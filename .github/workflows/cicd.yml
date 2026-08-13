@@ -1,20 +1,14 @@
 name: CI/CD pipeline
 on:
-  push:
-    branches: [ main ]
   pull_request:
+    types: [closed]
     branches: [ main ]
-  workflow_dispatch:
-    inputs:
-      build_images:
-        description: 'Set to "true" to build Docker images when manually triggering workflow'
-        required: false
-        default: 'false'
 
 jobs:
   test-client:
     name: Test & Build Client
     runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true }}
     steps:
       - uses: actions/checkout@v3
       - name: Use Node 20
@@ -34,6 +28,7 @@ jobs:
   test-server:
     name: Test Server
     runs-on: ubuntu-latest
+    if: ${{ github.event.pull_request.merged == true }}
     steps:
       - uses: actions/checkout@v3
       - name: Use Node 20
@@ -50,6 +45,7 @@ jobs:
   Deploy:
     runs-on: self-hosted
     needs: [test-client, test-server]
+    if: ${{ github.event.pull_request.merged == true }}
     env:
       SHINE32_PASSWORD: ${{ secrets.SHINE32_PASSWORD }}
       EXPENSE_TRACKER_DIR: ${{ vars.EXPENSE_TRACKER_DIR }}
