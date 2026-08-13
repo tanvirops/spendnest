@@ -5,3 +5,4 @@
 /client/.env
 /server/dist
 /server/.env
+./deploy.sh
