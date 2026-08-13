@@ -1,4 +1,4 @@
-name: CI/CD
+name: CI/CD pipeline
 on:
   push:
     branches: [ main ]
@@ -46,3 +46,14 @@ jobs:
       - name: Run server tests
         working-directory: ./server
         run: npm test --if-present
+  Deploy:
+    runs-on: self-hosted
+    needs: [test-client, test-server]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Sync Project 
+        run: |
+              sudo mkdir -p /var/www/expense-tracker
+              sudo rsync -a --delete ./ /var/www/expense-tracker/
+              cat /var/www/expense-tracker/.env
