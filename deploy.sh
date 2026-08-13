@@ -5,6 +5,12 @@ set -e
           export EXPENSE_TRACKER_DOMAIN="${{ vars.EXPENSE_TRACKER_DOMAIN }}"
           export EXPENSE_TRACKER_DIR="${{ vars.EXPENSE_TRACKER_DIR }}"
 
+          # Docker Images build
+            docker-compose down || true
+            docker-compose build
+            docker-compose up -d
+            docker ps | grep expense-*
+
           if [ ! -d "/etc/ssl/cloudflare" ]; then
               echo "Creating Cloudflare directory..."
               sudo mkdir -p /etc/ssl/cloudflare

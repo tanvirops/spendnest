@@ -50,10 +50,20 @@ jobs:
     runs-on: self-hosted
     needs: [test-client, test-server]
     steps:
+      - name: Check App Directory Exist Or Not 
+        run: |
+          if [ ! -d "${{vars.EXPENSE_TRACKER_DIR}}" ]; then
+            echo "Directory ${{vars.EXPENSE_TRACKER_DIR}} does not exist. Creating it..."
+            mkdir -p "${{vars.EXPENSE_TRACKER_DIR}}"
+            sudo chown -R shine32:shine32 /var/www/expense-tracker
+          else
+            echo "Directory ${{vars.EXPENSE_TRACKER_DIR}} already exists."
+          fi
       - name: Deploy Configuration
-        working-directory: ${{vars.LOTTIEICON_WORKSPACE}}
+        working-directory: ${{vars.EXPENSE_TRACKER_DIR}}
         run: |
           pwd
-          echo ${{vars.LOTTIEICON_WORKSPACE}}
+          echo ${{vars.EXPENSE_TRACKER_DIR}}
           chmod +x deploy.sh
+          ./deploy.sh
       
