@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
     if (user) return res.status(400).json({ message: 'Email is already registered' });
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const verificationToken = crypto.randomBytes(32).toString('hex');
+    const verificationToken = crypto.randomUUID();
 
     user = await User.create({
       name,
