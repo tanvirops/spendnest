@@ -1,11 +1,17 @@
 import express from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import crypto from 'crypto';
 import passport from 'passport';
 import User from '../models/User.js';
 import { authenticateJWT } from '../middleware/auth.js';
 import { getProfile, changePassword } from '../controllers/profile.controller.js';
+
+
+import crypto from 'crypto';
+if (!globalThis.crypto) {
+  globalThis.crypto = crypto;
+}
+
 
 const router = express.Router();
 
