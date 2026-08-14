@@ -76,6 +76,7 @@ router.post('/login', async (req, res) => {
     }
 
     const token = generateToken(user);
+    console.log(`Login successful for user: ${user.email}, token: ${token.slice(0, 8)}...`);
     res.json({
       token,
       user: { id: user._id, name: user.name, email: user.email, isVerified: user.isVerified },
