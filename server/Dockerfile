@@ -10,7 +10,7 @@ COPY . .
 
 ARG MONGO_URI
 ENV MONGO_URI=$MONGO_URI
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 
 EXPOSE 5000
 CMD ["node", "src/server.js"]
