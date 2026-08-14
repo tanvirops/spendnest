@@ -10,9 +10,7 @@ console.log(`Google OAuth - CLIENT_ID set: ${hasGoogleId}, CLIENT_SECRET set: ${
 console.log(`Google OAuth - CLIENT_ID: ${maskedId}, CLIENT_SECRET: ${maskedSecret}`);
 
 // Build absolute callback URL (passport-google-oauth20 requires absolute callback)
-const SERVER_ROOT = process.env.SERVER_URL || `http://localhost:${process.env.PORT || 5000}`;
-const callbackURL = `${SERVER_ROOT}/api/auth/google/callback`;
-console.log(`Google OAuth - using callbackURL: ${callbackURL}`);
+const callbackURL = process.env.GOOGLE_REDIRECT_URI || `${process.env.CLIENT_URL}/api/auth/google/callback`;
 
 // Only configure Google strategy if credentials are available
 if (hasGoogleId && hasGoogleSecret) {
