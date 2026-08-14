@@ -21,6 +21,7 @@ if (hasGoogleId && hasGoogleSecret) {
           clientID: process.env.GOOGLE_CLIENT_ID,
           clientSecret: process.env.GOOGLE_CLIENT_SECRET,
           callbackURL,
+          proxy: true, // Handle reverse proxy scenarios
         },
         async (accessToken, refreshToken, profile, done) => {
           try {
