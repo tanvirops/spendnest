@@ -6,9 +6,12 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
-      manifest: {
+        registerType: 'autoUpdate',
+        includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
+        workbox: {
+          navigateFallbackDenylist: [/^\/api\//],
+        },
+        manifest: {
         name: 'Expense Tracker MVP',
         short_name: 'ExpenseTracker',
         description: 'Modern offline-ready expense tracking app',
