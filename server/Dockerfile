@@ -13,4 +13,4 @@ ENV MONGO_URI=$MONGO_URI
 ENV NODE_ENV=development
 
 EXPOSE 5000
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "start"]

@@ -6,6 +6,7 @@ import axiosClient from '../api/axiosClient';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
 import PageTitle from '../utils/PageTitle';
+import { formatCurrency, formatDate } from '../utils/baseUtils';
 
 export default function ExpensesPage({ onOpenAddExpenseModal }) {
   const [search, setSearch] = useState('');
@@ -101,8 +102,8 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
                     <span className="text-sm font-semibold text-slate-900 dark:text-white">{exp.name}</span>
                     <CategoryBadge category={exp.category} />
                   </div>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">${exp.amount}</p>
-                  <p className="text-xs text-slate-400 mt-1">{new Date(exp.expenseDate).toISOString().slice(0,10)}</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">{formatCurrency(exp.amount)}</p>
+                  <p className="text-xs text-slate-400 mt-1">{formatDate(exp.expenseDate)}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <button onClick={() => handleDelete(exp._id)} className="p-2 rounded-full text-rose-600 bg-rose-50 dark:bg-transparent">

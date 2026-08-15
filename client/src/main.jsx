@@ -25,6 +25,7 @@ if ('serviceWorker' in navigator) {
 }
 // disable verbose console in production
 import './utils/disableConsoleProd';
+import { getProfile } from './api/profile';
 
 // Set root element for React Modal accessibility
 Modal.setAppElement('#root');
@@ -35,6 +36,7 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       retry: 1,
       staleTime: 5 * 60 * 1000,
+      queryFn: getProfile
     },
   },
 });

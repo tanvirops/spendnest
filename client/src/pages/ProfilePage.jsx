@@ -5,30 +5,18 @@ import { useForm } from 'react-hook-form';
 import axiosClient from '../api/axiosClient';
 import toast from 'react-hot-toast';
 import PageTitle from '../utils/PageTitle';
+import { changePassword } from '../api/profile';
+import { useProfile } from '../hooks/useProfile';
 
 export default function ProfilePage() {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const {user} = useProfile()
   const navigate = useNavigate();
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await axiosClient.get('/profile');
-        setUser(res.data.data);
-      } catch (err) {
-        toast.error('Failed to load profile details');
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProfile();
-  }, []);
 
   const onChangePassword = async (data) => {
     try {
-      await axiosClient.post('/profile/change-password', data);
+      await changePassword(data);
       toast.success('Password updated successfully!');
       reset();
     } catch (err) {
@@ -40,10 +28,6 @@ export default function ProfilePage() {
     localStorage.removeItem('auth_token');
     navigate('/login');
   };
-
-  if (loading) {
-    return <div className="text-xs text-center py-10 text-slate-400">Loading profile...</div>;
-  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -61,12 +45,12 @@ export default function ProfilePage() {
       <div className="p-6 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-sm space-y-4">
         <div className="flex items-center gap-4 pb-4 border-b border-slate-100 dark:border-slate-900">
           <div className="w-14 h-14 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center font-bold text-xl uppercase">
-            {user?.name ? user.name[0] : <FiUser className="w-6 h-6" />}
+            {user?.data?.name ? user?.data?.name[0] : <FiUser className="w-6 h-6" />}
           </div>
           <div>
-            <h2 className="text-lg font-bold text-slate-900 dark:text-white">{user?.name || 'User'}</h2>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white">{user?.data?.name || 'User'}</h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
-              <FiMail className="w-3.5 h-3.5" /> {user?.email}
+              <FiMail className="w-3.5 h-3.5" /> {user?.data?.email}
             </p>
           </div>
         </div>
@@ -74,11 +58,21 @@ export default function ProfilePage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
             <span className="text-slate-400 block mb-1">Account Role</span>
-            <span className="font-semibold text-slate-800 dark:text-slate-200 uppercase">{user?.role || 'User'}</span>
+            <span className="font-semibold text-slate-800 dark:text-slate-200 uppercase">{user?.data?.role || 'User'}</span>
           </div>
           <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
             <span className="text-slate-400 block mb-1">Status</span>
             <span className="font-semibold text-emerald-600 dark:text-emerald-400">Active</span>
+          </div>
+          <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
+            <span className="text-slate-400 block mb-1">Account Verified</span>
+            <span className={
+              `font-semibold ${user?.data?.isVerified ? 'text-emerald-600 dark:text-emerald-400': 'text-yellow-600 dark:text-yellow-400'}`
+            }>
+              {
+                user?.data?.isVerified ? "Yes":"No"
+          }
+          </span>
           </div>
         </div>
       </div>

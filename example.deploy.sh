@@ -11,7 +11,7 @@ run_sudo() {
 
 # 1. Docker Images Build
 docker-compose down || true
-docker-compose build
+docker-compose build --no-cache
 docker-compose up -d
 docker ps | grep expense-* || true
 echo "Docker containers are up and running."
