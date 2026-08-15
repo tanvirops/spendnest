@@ -15,24 +15,11 @@ import {
 import axiosClient from '../api/axiosClient';
 import { CategoryBadge } from '../utils/categoryIcons';
 import PageTitle from '../utils/PageTitle';
+import { formatCurrency, formatDate } from '../utils/baseUtils';
 
-const formatCurrency = (val) => {
-  return new Intl.NumberFormat('bn-BD', {
-    style: 'currency',
-    currency: 'BDT',
-    minimumFractionDigits: 2,
-  }).format(val || 0);
-};
 
-const formatDate = (dateStr) => {
-  if (!dateStr) return '';
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(dateStr));
-};
+
+
 
 export default function Dashboard({ onOpenAddExpenseModal }) {
   // Fetch Dashboard Analytics Summary
@@ -67,26 +54,28 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
   };
 
   const getAlertBadge = () => {
-    if (summary.alertLevel === 'EXCEEDED') {
-      return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border border-rose-200 dark:border-rose-900">
-          <FiAlertTriangle className="w-3.5 h-3.5" /> Budget Exceeded
-        </span>
-      );
-    }
-    if (summary.alertLevel === 'WARNING_90') {
-      return (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200 dark:border-amber-900">
-          <FiAlertTriangle className="w-3.5 h-3.5" /> 90% Threshold Reached
-        </span>
-      );
-    }
+  const baseStyle = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold border";
+  
+  if (summary.alertLevel === 'EXCEEDED') {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-900">
-        <FiCheckCircle className="w-3.5 h-3.5" /> On Track
+      <span className={`${baseStyle} bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border-rose-200 dark:border-rose-900`}>
+        <FiAlertTriangle className="w-3 h-3 shrink-0" /> Exceeded
       </span>
     );
-  };
+  }
+  if (summary.alertLevel === 'WARNING_90') {
+    return (
+      <span className={`${baseStyle} bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400 border-amber-200 dark:border-amber-900`}>
+        <FiAlertTriangle className="w-3 h-3 shrink-0" /> 90% Used
+      </span>
+    );
+  }
+  return (
+    <span className={`${baseStyle} bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900`}>
+      <FiCheckCircle className="w-3 h-3 shrink-0" /> On Track
+    </span>
+  );
+};
 
   const getProgressBarColor = () => {
     if (summary.budgetUsagePercent >= 100) return 'bg-rose-500';
@@ -387,7 +376,7 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
                       {formatDate(expense.expenseDate)}
                     </td>
                     <td className="px-6 py-4 text-right font-semibold text-slate-900 dark:text-white">
-                      -{formatCurrency(expense.amount)}
+                      {formatCurrency(expense.amount)}
                     </td>
                   </tr>
                 ))
@@ -425,7 +414,7 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
                 </div>
                 <div className="text-right shrink-0">
                   <p className="text-sm font-semibold text-slate-900 dark:text-white">
-                    -{formatCurrency(expense.amount)}
+                    {formatCurrency(expense.amount)}
                   </p>
                 </div>
               </div>
