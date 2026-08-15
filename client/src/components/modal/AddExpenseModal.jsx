@@ -64,7 +64,7 @@ export default function AddExpenseModal({ isOpen, onRequestClose }) {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Amount ($)</label>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Amount (৳)</label>
           <input
             type="number"
             step="0.01"

@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import axiosClient from '../api/axiosClient';
 import toast from 'react-hot-toast';
+import PageTitle from '../utils/PageTitle';
 
 export default function RegisterPage() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -31,6 +32,11 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 p-4">
+      <PageTitle 
+        title="Register" 
+        description="Create a new SpendNest account to start tracking your personal finances and managing your expenses."
+        keywords="register, sign up, create account, expense tracker"
+      />
       <div className="max-w-md w-full bg-white dark:bg-slate-950 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Create Account</h1>

@@ -6,23 +6,21 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-        registerType: 'autoUpdate',
-        includeAssets: ['favicon.ico', 'apple-touch-icon.png'],
-        workbox: {
-          navigateFallbackDenylist: [/^\/api\//],
-        },
-        manifest: {
-        name: 'Expense Tracker MVP',
-        short_name: 'ExpenseTracker',
-        description: 'Modern offline-ready expense tracking app',
-        theme_color: '#0f172a',
-        background_color: '#0f172a',
-        display: 'standalone',
-        icons: [
-          { src: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' },
-          { src: '/icons.svg', sizes: 'any', type: 'image/svg+xml' }
-        ]
-      }
+      registerType: 'autoUpdate',
+      includeAssets: [
+        'favicon.ico', 
+        'favicon.svg',
+        'favicon-96x96.png',
+        'apple-touch-icon.png',
+        'web-app-manifest-192x192.png',
+        'web-app-manifest-512x512.png'
+      ],
+      workbox: {
+        navigateFallbackDenylist: [/^\/api\//],
+        cleanupOutdatedCaches: true,
+      },
+      manifest: false, // Use site.webmanifest instead
+      manifestFilename: 'site.webmanifest'
     })
   ],
   server: {

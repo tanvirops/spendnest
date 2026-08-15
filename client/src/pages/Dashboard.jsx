@@ -14,11 +14,12 @@ import {
 } from 'react-icons/fi';
 import axiosClient from '../api/axiosClient';
 import { CategoryBadge } from '../utils/categoryIcons';
+import PageTitle from '../utils/PageTitle';
 
 const formatCurrency = (val) => {
-  return new Intl.NumberFormat('en-US', {
+  return new Intl.NumberFormat('bn-BD', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'BDT',
     minimumFractionDigits: 2,
   }).format(val || 0);
 };
@@ -107,6 +108,11 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
 
   return (
     <div className="space-y-6">
+      <PageTitle 
+        title="Dashboard" 
+        description="Track your spending trends, monitor budget metrics, and manage your personal finances with SpendNest."
+        keywords="dashboard, budget, spending, expenses, financial overview"
+      />
       {/* Top Header & Add Expense Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-slate-200/80 dark:border-slate-800">
         <div>

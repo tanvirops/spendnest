@@ -5,6 +5,7 @@ import { CategoryBadge } from '../utils/categoryIcons';
 import axiosClient from '../api/axiosClient';
 import toast from 'react-hot-toast';
 import { useQueryClient } from '@tanstack/react-query';
+import PageTitle from '../utils/PageTitle';
 
 export default function ExpensesPage({ onOpenAddExpenseModal }) {
   const [search, setSearch] = useState('');
@@ -32,6 +33,11 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
 
   return (
     <div className="space-y-6">
+      <PageTitle 
+        title="Expenses" 
+        description="View, filter, and manage all your logged expenses with detailed insights on spending categories and amounts."
+        keywords="expenses, spending, transaction history, expense tracking"
+      />
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Expenses</h1>

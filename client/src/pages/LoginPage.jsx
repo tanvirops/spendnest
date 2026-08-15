@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import axiosClient from '../api/axiosClient';
 import toast from 'react-hot-toast';
+import PageTitle from '../utils/PageTitle';
 
 export default function LoginPage() {
   const { register, handleSubmit } = useForm();
@@ -24,6 +25,11 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 p-4">
+      <PageTitle 
+        title="Login" 
+        description="Sign in to your SpendNest account to access your personal finance tracker and manage your expenses."
+        keywords="login, sign in, authentication, expense tracker"
+      />
       <div className="max-w-md w-full bg-white dark:bg-slate-950 p-8 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm space-y-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-slate-900 dark:text-white">Welcome Back</h1>

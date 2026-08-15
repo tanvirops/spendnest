@@ -6,6 +6,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { FiMoreVertical, FiEdit3, FiTrash2, FiX } from 'react-icons/fi';
 import axiosClient from '../api/axiosClient';
 import toast from 'react-hot-toast';
+import PageTitle from '../utils/PageTitle';
 
 const buttonBaseClasses = 'inline-flex w-full sm:w-auto items-center justify-center rounded-lg text-sm font-semibold transition-opacity';
 const primaryButtonClasses = `${buttonBaseClasses} sm:min-w-[140px] px-4 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90`;
@@ -175,6 +176,11 @@ export default function BudgetPage() {
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto px-4 sm:px-0">
+      <PageTitle 
+        title="Budget Management" 
+        description="Create, edit, and manage your personal budgets. Track budget dates, set spending limits, and monitor budget usage."
+        keywords="budget, spending limit, budget management, financial planning"
+      />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center justify-between p-4 sm:p-6 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-sm">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Budget Management</h1>

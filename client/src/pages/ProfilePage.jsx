@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import axiosClient from '../api/axiosClient';
 import toast from 'react-hot-toast';
+import PageTitle from '../utils/PageTitle';
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -46,6 +47,11 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
+      <PageTitle 
+        title="Profile" 
+        description="Manage your account settings, personal information, and change your password on SpendNest."
+        keywords="profile, account settings, user profile, password change"
+      />
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Account Profile</h1>
         <p className="text-sm text-slate-500 dark:text-slate-400">Manage your profile details and security settings.</p>
