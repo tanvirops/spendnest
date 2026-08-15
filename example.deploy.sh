@@ -67,8 +67,8 @@ server {
     listen 443 ssl;
     server_name ${EXPENSE_TRACKER_DOMAIN} www.${EXPENSE_TRACKER_DOMAIN};
 
-    ssl_certificate /etc/ssl/cloudflare/expense.tanvirops.xyz.crt;
-    ssl_certificate_key /etc/ssl/cloudflare/expense.tanvirops.xyz.key;
+    ssl_certificate /etc/ssl/cloudflare/${EXPENSE_TRACKER_DOMAIN}.crt;
+    ssl_certificate_key /etc/ssl/cloudflare/${EXPENSE_TRACKER_DOMAIN}.key;
 
    location / {
         proxy_pass http://127.0.0.1:3041;
