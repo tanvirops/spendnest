@@ -24,7 +24,7 @@ import { formatCurrency, formatDate } from '../utils/baseUtils';
 export default function Dashboard({ onOpenAddExpenseModal }) {
   // Fetch Dashboard Analytics Summary
   const { data: summaryData, isLoading: isSummaryLoading, isError: isSummaryError, error: summaryError } = useQuery({
-    queryKey: ['dashboard-summary'],
+  queryKey: ['dashboard-summary'],
     queryFn: async () => {
       const { data } = await axiosClient.get('/expenses/dashboard');
       return data?.data;

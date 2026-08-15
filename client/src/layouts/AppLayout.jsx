@@ -1,27 +1,34 @@
-import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { 
-  FiGrid, 
-  FiDollarSign, 
-  FiPieChart, 
-  FiUser, 
-  FiLogOut, 
-  FiPlus 
-} from 'react-icons/fi';
+import React from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import {
+  FiGrid,
+  FiDollarSign,
+  FiPieChart,
+  FiUser,
+  FiLogOut,
+  FiPlus,
+} from "react-icons/fi";
+import { useQuery } from "@tanstack/react-query";
+import { ProfileProvider } from "../context/ProfileContext";
+import { useProfile } from "../hooks/useProfile";
 
-export default function AppLayout({ children, onOpenExpenseModal }) {
+function AppLayoutContent({ children, onOpenExpenseModal }) {
+  const { user } = useProfile();
   const navigate = useNavigate();
-
   const handleLogout = () => {
-    localStorage.removeItem('auth_token');
-    navigate('/login');
+    localStorage.removeItem("auth_token");
+    navigate("/login");
   };
 
+  const {} = useQuery({
+    queryKey: ["profile"],
+  });
+
   const navItems = [
-    { label: 'Dashboard', path: '/', icon: FiGrid },
-    { label: 'Expenses', path: '/expenses', icon: FiDollarSign },
-    { label: 'Budget', path: '/budget', icon: FiPieChart },
-    { label: 'Profile', path: '/profile', icon: FiUser },
+    { label: "Dashboard", path: "/", icon: FiGrid },
+    { label: "Expenses", path: "/expenses", icon: FiDollarSign },
+    { label: "Budget", path: "/budget", icon: FiPieChart },
+    { label: "Profile", path: "/profile", icon: FiUser },
   ];
 
   return (
@@ -30,8 +37,14 @@ export default function AppLayout({ children, onOpenExpenseModal }) {
       <aside className="hidden md:flex flex-col w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 fixed h-full z-20 justify-between">
         <div className="space-y-6">
           <div className="flex items-center gap-2.5 px-2">
-            <img src="spendnest-log.png" alt="Logo" className="w-10 h-10 flex-shrink-0" />
-            <span className="font-bold text-lg text-slate-900 dark:text-white truncate">SpendNest</span>
+            <img
+              src="spendnest-log.png"
+              alt="Logo"
+              className="w-10 h-10 flex-shrink-0"
+            />
+            <span className="font-bold text-lg text-slate-900 dark:text-white truncate">
+              SpendNest
+            </span>
           </div>
 
           <nav className="space-y-1">
@@ -42,8 +55,8 @@ export default function AppLayout({ children, onOpenExpenseModal }) {
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900'
-                      : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900'
+                      ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
+                      : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900"
                   }`
                 }
               >
@@ -73,10 +86,20 @@ export default function AppLayout({ children, onOpenExpenseModal }) {
       {/* Main Content Body */}
       <div className="flex-1 flex flex-col md:pl-64 min-w-0">
         <header className="h-16 border-b border-slate-200/80 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md px-4 md:px-8 flex items-center justify-between sticky top-0 z-10">
-          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Personal Workspace</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            Hi! {user?.data?.name}
+          </span>
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-800 flex items-center justify-center font-semibold text-xs">
-              U
+              {user?.data?.avatar ? (
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                user?.data.name?.charAt(0) || "U"
+              )}
             </div>
           </div>
         </header>
@@ -94,7 +117,9 @@ export default function AppLayout({ children, onOpenExpenseModal }) {
             to={item.path}
             className={({ isActive }) =>
               `flex flex-col items-center gap-1 p-2 rounded-lg text-xs transition-colors ${
-                isActive ? 'text-slate-900 dark:text-white font-bold' : 'text-slate-400'
+                isActive
+                  ? "text-slate-900 dark:text-white font-bold"
+                  : "text-slate-400"
               }`
             }
           >
@@ -110,5 +135,15 @@ export default function AppLayout({ children, onOpenExpenseModal }) {
         </button>
       </nav>
     </div>
+  );
+}
+
+export default function AppLayout({ children, onOpenExpenseModal }) {
+  return (
+    <ProfileProvider>
+      <AppLayoutContent onOpenExpenseModal={onOpenExpenseModal}>
+        {children}
+      </AppLayoutContent>
+    </ProfileProvider>
   );
 }

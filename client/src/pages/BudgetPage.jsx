@@ -7,7 +7,7 @@ import { FiMoreVertical, FiEdit3, FiTrash2, FiX } from 'react-icons/fi';
 import axiosClient from '../api/axiosClient';
 import toast from 'react-hot-toast';
 import PageTitle from '../utils/PageTitle';
-import { formatCurrency } from '../utils/baseUtils';
+import { formatCurrency, formatDate } from '../utils/baseUtils';
 
 const buttonBaseClasses = 'inline-flex w-full sm:w-auto items-center justify-center rounded-lg text-sm font-semibold transition-opacity';
 const primaryButtonClasses = `${buttonBaseClasses} sm:min-w-[140px] px-4 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:opacity-90`;
