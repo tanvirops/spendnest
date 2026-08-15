@@ -30,7 +30,7 @@ export default function AppLayout({ children, onOpenExpenseModal }) {
       <aside className="hidden md:flex flex-col w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 p-4 fixed h-full z-20 justify-between">
         <div className="space-y-6">
           <div className="flex items-center gap-2.5 px-2">
-            <img src="/spendnest-log.jpeg" alt="Logo" className="w-8 h-8 flex-shrink-0" />
+            <img src="spendnest-log.png" alt="Logo" className="w-10 h-10 flex-shrink-0" />
             <span className="font-bold text-lg text-slate-900 dark:text-white truncate">SpendNest</span>
           </div>
 
