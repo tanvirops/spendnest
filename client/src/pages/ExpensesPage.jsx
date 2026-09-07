@@ -137,7 +137,9 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
                 <tr key={exp._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/40">
                   <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">{exp.name}</td>
                   <td className="px-6 py-4"><CategoryBadge category={exp.category} /></td>
-                  <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">${exp.amount}</td>
+                  <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">
+                    {formatCurrency(exp.amount)}
+                  </td>
                   <td className="px-6 py-4 text-right">
                     <button onClick={() => handleDelete(exp._id)} className="p-1.5 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg">
                       <FiTrash2 className="w-4 h-4" />
