@@ -161,3 +161,31 @@ export const deleteExpense = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+const DEFAULT_CATEGORIES = [
+  { value: 'Food', label: 'Food' },
+  { value: 'Shopping', label: 'Shopping' },
+  { value: 'Transport', label: 'Transport' },
+  { value: 'Medicine', label: 'Medicine' },
+  { value: 'Education', label: 'Education' },
+  { value: 'Bills', label: 'Bills' },
+  { value: 'Entertainment', label: 'Entertainment' },
+  { value: 'Travel', label: 'Travel' },
+  { value: 'Others', label: 'Others' },
+];
+
+// get categories by the auth id
+export const getExpenseCategories = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const defaultCategoryValues = DEFAULT_CATEGORIES.map(cat => cat.value);
+    const categories = await Expense.distinct('category', { userId });
+
+    res.json({
+      success: true,
+      data: [...new Set([...defaultCategoryValues, ...categories?.filter(Boolean)])].sort((a, b) => a.localeCompare(b))
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};

@@ -5,7 +5,8 @@ import {
   getExpenseById,
   createExpense,
   updateExpense,
-  deleteExpense
+  deleteExpense,
+  getExpenseCategories
 } from '../controllers/expense.controller.js';
 import { authenticateJWT } from '../middleware/auth.js';
 
@@ -19,6 +20,7 @@ router.get('/dashboard', getDashboardSummary);
 
 // Get all expenses
 router.get('/', getExpenses);
+router.get('/categories', getExpenseCategories);
 
 // Get single expense
 router.get('/:id', getExpenseById);

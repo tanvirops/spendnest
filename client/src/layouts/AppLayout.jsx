@@ -28,7 +28,7 @@ function AppLayoutContent({ children, onOpenExpenseModal }) {
     { label: "Dashboard", path: "/", icon: FiGrid },
     { label: "Expenses", path: "/expenses", icon: FiDollarSign },
     { label: "Budget", path: "/budget", icon: FiPieChart },
-    { label: "Profile", path: "/profile", icon: FiUser },
+    { label: "Profile", path: { pathname: "/profile", search: "?tab=profile" }, icon: FiUser },
   ];
 
   return (
@@ -50,11 +50,11 @@ function AppLayoutContent({ children, onOpenExpenseModal }) {
           <nav className="space-y-1">
             {navItems.map((item) => (
               <NavLink
-                key={item.path}
+                key={item.label}
                 to={item.path}
                 className={({ isActive }) =>
                   `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                    isActive
+                    isActive || (item.label === "Profile" && window.location.pathname === "/profile")
                       ? "bg-slate-900 text-white dark:bg-slate-100 dark:text-slate-900"
                       : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-900"
                   }`
@@ -113,11 +113,11 @@ function AppLayoutContent({ children, onOpenExpenseModal }) {
       <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur-md z-30 px-4 py-2 flex items-center justify-around">
         {navItems.map((item) => (
           <NavLink
-            key={item.path}
+            key={item.label}
             to={item.path}
             className={({ isActive }) =>
               `flex flex-col items-center gap-1 p-2 rounded-lg text-xs transition-colors ${
-                isActive
+                isActive || (item.label === "Profile" && window.location.pathname === "/profile")
                   ? "text-slate-900 dark:text-white font-bold"
                   : "text-slate-400"
               }`

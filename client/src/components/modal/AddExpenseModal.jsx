@@ -3,24 +3,26 @@ import Modal from 'react-modal';
 import { useForm, Controller } from 'react-hook-form';
 import CreatableSelect from 'react-select/creatable';
 import { FiX } from 'react-icons/fi';
-import { useCreateExpense } from '../../hooks/useExpenses';
+import { format } from 'date-fns';
+import { useCreateExpense, useExpenseCategories } from '../../hooks/useExpenses';
 import toast from 'react-hot-toast';
+import { useProfile } from '../../hooks/useProfile';
+import { findCurrencyIcon } from '../../utils/baseUtils';
 
-const DEFAULT_CATEGORIES = [
-  { value: 'Food', label: 'Food' },
-  { value: 'Shopping', label: 'Shopping' },
-  { value: 'Transport', label: 'Transport' },
-  { value: 'Medicine', label: 'Medicine' },
-  { value: 'Education', label: 'Education' },
-  { value: 'Bills', label: 'Bills' },
-  { value: 'Entertainment', label: 'Entertainment' },
-  { value: 'Travel', label: 'Travel' },
-  { value: 'Others', label: 'Others' },
-];
+
+
+const formatDateTimeLocal = (date = new Date()) => format(date, "yyyy-MM-dd'T'HH:mm");
 
 export default function AddExpenseModal({ isOpen, onRequestClose }) {
+    const { user} = useProfile();
   const createMutation = useCreateExpense();
-  const { register, handleSubmit, control, reset, formState: { errors } } = useForm();
+  const { data: fetchedCategories = [], isLoading } = useExpenseCategories();
+  const categoryOptions = [...new Map([...fetchedCategories].map((option) => [option.value, option])).values()];
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm({
+    defaultValues: {
+      expenseDate: formatDateTimeLocal(),
+    },
+  });
 
   const onSubmit = (data) => {
     createMutation.mutate({
@@ -64,7 +66,11 @@ export default function AddExpenseModal({ isOpen, onRequestClose }) {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Amount (৳)</label>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Amount
+            ({
+              findCurrencyIcon(user?.data?.currency || 'BDT')
+            })
+          </label>
           <input
             type="number"
             step="0.01"
@@ -84,9 +90,10 @@ export default function AddExpenseModal({ isOpen, onRequestClose }) {
             render={({ field }) => (
               <CreatableSelect
                 {...field}
-                options={DEFAULT_CATEGORIES}
+                options={categoryOptions}
                 className="text-sm my-react-select-container"
                 classNamePrefix="my-react-select"
+                isLoading={isLoading}
                 placeholder="Select or type custom..."
               />
             )}
@@ -99,7 +106,7 @@ export default function AddExpenseModal({ isOpen, onRequestClose }) {
           <input
             type="datetime-local"
             {...register('expenseDate')}
-            defaultValue={new Date().toISOString().slice(0, 16)}
+            defaultValue={formatDateTimeLocal()}
             className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100"
           />
         </div>
