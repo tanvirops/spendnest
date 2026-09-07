@@ -21,6 +21,23 @@ export function useExpenses(params = {}) {
 }
 
 /**
+ * Fetch unique expense categories for the authenticated user
+ */
+export function useExpenseCategories() {
+  return useQuery({
+    queryKey: ['expense-categories'],
+    queryFn: async () => {
+      const { data } = await axiosClient.get('/expenses/categories');
+      return (data?.data || []).map((category) => ({
+        value: category,
+        label: category,
+      }));
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+}
+
+/**
  * Mutation hook to create a new expense entry
  */
 export function useCreateExpense() {
@@ -36,6 +53,7 @@ export function useCreateExpense() {
       // Refetch expenses list & dashboard metrics automatically
       queryClient.invalidateQueries({ queryKey: ['expenses'] });
       queryClient.invalidateQueries({ queryKey: ['dashboard-summary'] });
+      queryClient.invalidateQueries({ queryKey: ['expense-categories'] });
     },
     onError: (error) => {
       toast.error(error.response?.data?.message || 'Failed to add expense', {id: 'add-expense'});
