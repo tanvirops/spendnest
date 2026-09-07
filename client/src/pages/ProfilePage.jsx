@@ -155,7 +155,7 @@ export default function ProfilePage() {
                   <span className="text-slate-400 block mb-1">Currency</span>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">
                     {findCurrencyIcon(user?.data?.currency || 'BDT')} {" "}
-                    {user?.data?.currency || 'BDT'} - {findCurrency(user?.data?.currency || 'BDT')?.label || 'Bangladeshi Taka'}
+                     {findCurrency(user?.data?.currency || 'BDT')?.label || 'Bangladeshi Taka'}
                   </span>
                 </div>
               </div>
