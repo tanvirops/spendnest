@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import { useForm, Controller } from 'react-hook-form';
 import CreatableSelect from 'react-select/creatable';
 import { FiX } from 'react-icons/fi';
+import { format } from 'date-fns';
 import { useCreateExpense } from '../../hooks/useExpenses';
 import toast from 'react-hot-toast';
 import { useProfile } from '../../hooks/useProfile';
@@ -20,11 +21,7 @@ const DEFAULT_CATEGORIES = [
   { value: 'Others', label: 'Others' },
 ];
 
-const formatDateTimeLocal = (date = new Date()) => {
-  const pad = (value) => String(value).padStart(2, '0');
-
-  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
-};
+const formatDateTimeLocal = (date = new Date()) => format(date, "yyyy-MM-dd'T'HH:mm");
 
 export default function AddExpenseModal({ isOpen, onRequestClose }) {
     const { user} = useProfile();

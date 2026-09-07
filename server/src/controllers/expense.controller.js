@@ -161,3 +161,20 @@ export const deleteExpense = async (req, res) => {
     res.status(500).json({ success: false, message: err.message });
   }
 };
+
+
+// get categories by the auth id
+export const getExpenseCategories = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const categories = await Expense.distinct('category', { userId });
+
+    res.json({
+      success: true,
+      data: categories.filter(Boolean).sort((a, b) => a.localeCompare(b))
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
