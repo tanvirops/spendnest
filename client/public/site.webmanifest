@@ -1,14 +1,16 @@
 {
+  "id": "/",
   "name": "SpendNest - Personal Finance Tracker",
   "short_name": "SpendNest",
-  "description": "Track expenses, manage budgets, and achieve financial goals with SpendNest",
+  "description": "Track expenses, manage budgets, and achieve financial goals with SpendNest.",
+  "lang": "en",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "theme_color": "#0f172a",
   "background_color": "#ffffff",
-  "categories": ["finance", "productivity"],
+  "categories": ["finance", "productivity", "business"],
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
