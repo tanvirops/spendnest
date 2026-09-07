@@ -8,9 +8,9 @@ import {
   FiLogOut,
   FiPlus,
 } from "react-icons/fi";
-import { useQuery } from "@tanstack/react-query";
 import { ProfileProvider } from "../context/ProfileContext";
 import { useProfile } from "../hooks/useProfile";
+import { getNavItems } from "../utils/baseUtils";
 
 function AppLayoutContent({ children, onOpenExpenseModal }) {
   const { user } = useProfile();
@@ -20,16 +20,7 @@ function AppLayoutContent({ children, onOpenExpenseModal }) {
     navigate("/login");
   };
 
-  const {} = useQuery({
-    queryKey: ["profile"],
-  });
-
-  const navItems = [
-    { label: "Dashboard", path: "/", icon: FiGrid },
-    { label: "Expenses", path: "/expenses", icon: FiDollarSign },
-    { label: "Budget", path: "/budget", icon: FiPieChart },
-    { label: "Profile", path: { pathname: "/profile", search: "?tab=profile" }, icon: FiUser },
-  ];
+  const navItems = getNavItems(user?.data?.currency || localStorage.getItem('user_currency') || 'BDT');
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 flex">
@@ -60,7 +51,13 @@ function AppLayoutContent({ children, onOpenExpenseModal }) {
                   }`
                 }
               >
-                <item.icon className="w-4 h-4" />
+                {item.iconType === "currency" ? (
+                  <span className="w-4 h-4 flex items-center justify-center text-sm font-bold">
+                    {item.currencySymbol}
+                  </span>
+                ) : (
+                  <item.icon className="w-4 h-4" />
+                )}
                 {item.label}
               </NavLink>
             ))}
@@ -123,7 +120,13 @@ function AppLayoutContent({ children, onOpenExpenseModal }) {
               }`
             }
           >
-            <item.icon className="w-5 h-5" />
+            {item.iconType === "currency" ? (
+              <span className="w-5 h-5 flex items-center justify-center text-base font-bold">
+                {item.currencySymbol}
+              </span>
+            ) : (
+              <item.icon className="w-5 h-5" />
+            )}
             <span>{item.label}</span>
           </NavLink>
         ))}
