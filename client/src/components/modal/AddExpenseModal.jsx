@@ -6,6 +6,7 @@ import { FiX } from 'react-icons/fi';
 import { useCreateExpense } from '../../hooks/useExpenses';
 import toast from 'react-hot-toast';
 import { useProfile } from '../../hooks/useProfile';
+import { findCurrencyIcon } from '../../utils/baseUtils';
 
 const DEFAULT_CATEGORIES = [
   { value: 'Food', label: 'Food' },
@@ -19,10 +20,20 @@ const DEFAULT_CATEGORIES = [
   { value: 'Others', label: 'Others' },
 ];
 
+const formatDateTimeLocal = (date = new Date()) => {
+  const pad = (value) => String(value).padStart(2, '0');
+
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+};
+
 export default function AddExpenseModal({ isOpen, onRequestClose }) {
     const { user} = useProfile();
   const createMutation = useCreateExpense();
-  const { register, handleSubmit, control, reset, formState: { errors } } = useForm();
+  const { register, handleSubmit, control, reset, formState: { errors } } = useForm({
+    defaultValues: {
+      expenseDate: formatDateTimeLocal(),
+    },
+  });
 
   const onSubmit = (data) => {
     createMutation.mutate({
@@ -105,7 +116,7 @@ export default function AddExpenseModal({ isOpen, onRequestClose }) {
           <input
             type="datetime-local"
             {...register('expenseDate')}
-            defaultValue={new Date().toISOString().slice(0, 16)}
+            defaultValue={formatDateTimeLocal()}
             className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-sm focus:outline-none focus:ring-2 focus:ring-slate-900 dark:focus:ring-slate-100"
           />
         </div>
