@@ -1,18 +1,28 @@
 import { useQuery } from "@tanstack/react-query";
-import { createContext } from "react";
+import { createContext, useEffect } from "react";
+import { FiAlertCircle } from "react-icons/fi";
 import { getProfile } from "../api/profile";
 import SplashScreen from "../components/SplashScreen";
 
-export const ProfileContext  = createContext(null);
+export const ProfileContext = createContext(null);
 
-export const ProfileProvider = ({children }) => {
-    const {data:user, isLoading, isError, error, refetch} = useQuery({
+export const ProfileProvider = ({ children }) => {
+    const { data: user, isLoading, isError, error, refetch } = useQuery({
         queryKey: ['user-profile'],
-    })
-    if(isLoading){
-        return <SplashScreen />
+        queryFn: getProfile,
+    });
+
+    useEffect(() => {
+        if (typeof window !== 'undefined' && user?.data?.currency) {
+            localStorage.setItem('user_currency', user.data.currency);
+        }
+    }, [user]);
+
+    if (isLoading) {
+        return <SplashScreen />;
     }
-    if(isError){
+
+    if (isError) {
       return (
          <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 text-slate-200 p-4">
         <div className="bg-rose-950/40 border border-rose-900/60 p-6 rounded-2xl max-w-md text-center">
@@ -31,9 +41,9 @@ export const ProfileProvider = ({children }) => {
     }
 
     return (
-        <ProfileContext.Provider value={{user, refetch}}>
+        <ProfileContext.Provider value={{ user, refetch }}>
             {children}
         </ProfileContext.Provider>
-    )
-}
+    );
+};
 

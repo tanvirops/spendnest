@@ -5,6 +5,11 @@ export const getProfile = async () => {
     return data;
 }
 
+export const updateProfile = async (data) => {
+    const response = await axiosClient.put('/profile', data);
+    return response.data;
+}
+
 export const changePassword = async (data) => {
     const res = await axiosClient.post('/profile/change-password', data);
     console.log(res)

@@ -15,13 +15,32 @@ export const getProfile = async (req, res) => {
 // Update user profile
 export const updateProfile = async (req, res) => {
   try {
-    const { name, avatar } = req.body;
+    const { name, avatar, currency } = req.body;
     const user = await User.findById(req.user.id);
 
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
-    if (name !== undefined) user.name = name;
-    if (avatar !== undefined) user.avatar = avatar;
+    if (name !== undefined && String(name).trim()) {
+      user.name = String(name).trim();
+    }
+
+    if (avatar !== undefined) {
+      user.avatar = avatar || '';
+    }
+
+    if (currency !== undefined) {
+      const normalizedCurrency = String(currency).toUpperCase();
+      const allowedCurrencies = ['BDT', 'USD', 'EUR', 'GBP', 'INR'];
+
+      if (!allowedCurrencies.includes(normalizedCurrency)) {
+        return res.status(400).json({
+          success: false,
+          message: 'Invalid currency selected',
+        });
+      }
+
+      user.currency = normalizedCurrency;
+    }
 
     await user.save();
     res.json({ success: true, data: user, message: 'Profile updated successfully' });

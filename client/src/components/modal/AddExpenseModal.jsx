@@ -5,6 +5,7 @@ import CreatableSelect from 'react-select/creatable';
 import { FiX } from 'react-icons/fi';
 import { useCreateExpense } from '../../hooks/useExpenses';
 import toast from 'react-hot-toast';
+import { useProfile } from '../../hooks/useProfile';
 
 const DEFAULT_CATEGORIES = [
   { value: 'Food', label: 'Food' },
@@ -19,6 +20,7 @@ const DEFAULT_CATEGORIES = [
 ];
 
 export default function AddExpenseModal({ isOpen, onRequestClose }) {
+    const { user} = useProfile();
   const createMutation = useCreateExpense();
   const { register, handleSubmit, control, reset, formState: { errors } } = useForm();
 
@@ -64,7 +66,11 @@ export default function AddExpenseModal({ isOpen, onRequestClose }) {
         </div>
 
         <div>
-          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Amount (৳)</label>
+          <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Amount
+            ({
+              findCurrencyIcon(user?.data?.currency || 'BDT')
+            })
+          </label>
           <input
             type="number"
             step="0.01"
