@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FiSearch, FiFilter, FiPlus, FiTrash2 } from 'react-icons/fi';
-import { useExpenses } from '../hooks/useExpenses';
+import { useExpenses, useExpenseCategories } from '../hooks/useExpenses';
 import { CategoryBadge } from '../utils/categoryIcons';
 import axiosClient from '../api/axiosClient';
 import toast from 'react-hot-toast';
@@ -12,11 +12,15 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('');
   const [sort, setSort] = useState('newest');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
+  const timezoneOffset = -new Date().getTimezoneOffset();
 
   const queryClient = useQueryClient();
-  const { data: expensesResult = { items: [], pagination: { page: 1, limit: 10, total: 0 } }, isLoading } = useExpenses({ search, category, sort, page, limit });
+  const { data: expensesResult = { items: [], pagination: { page: 1, limit: 10, total: 0 } }, isLoading } = useExpenses({ search, category, sort, startDate, endDate, timezoneOffset, page, limit });
+  const { data: categories = [] } = useExpenseCategories();
   const expenses = expensesResult.items || [];
   const pagination = expensesResult.pagination || { page: 1, limit: 10, total: 0 };
 
@@ -53,7 +57,7 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
       </div>
 
       {/* Filter Bar */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 p-4 rounded-xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950">
         <div className="relative">
           <FiSearch className="absolute left-3 top-3 text-slate-400" />
           <input
@@ -70,11 +74,11 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
           className="px-3 py-2 text-sm border border-slate-200 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-900"
         >
           <option value="">All Categories</option>
-          <option value="Food">Food</option>
-          <option value="Shopping">Shopping</option>
-          <option value="Transport">Transport</option>
-          <option value="Medicine">Medicine</option>
-          <option value="Bills">Bills</option>
+          {categories.map((categoryOption) => (
+            <option key={categoryOption.value} value={categoryOption.value}>
+              {categoryOption.label}
+            </option>
+          ))}
         </select>
 
         <select
@@ -87,6 +91,22 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
           <option value="highest">Sort: Highest Amount</option>
           <option value="lowest">Sort: Lowest Amount</option>
         </select>
+
+        <input
+          type="date"
+          value={startDate}
+          onChange={(e) => setStartDate(e.target.value)}
+          aria-label="Start date"
+          className="px-3 py-2 text-sm border border-slate-200 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-900"
+        />
+
+        <input
+          type="date"
+          value={endDate}
+          onChange={(e) => setEndDate(e.target.value)}
+          aria-label="End date"
+          className="px-3 py-2 text-sm border border-slate-200 dark:border-slate-800 rounded-lg bg-slate-50 dark:bg-slate-900"
+        />
       </div>
 
       {/* Mobile list view */}
@@ -124,6 +144,7 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
           <thead className="bg-slate-50 dark:bg-slate-900 text-xs text-slate-500 uppercase border-b border-slate-100 dark:border-slate-900">
             <tr>
               <th className="px-6 py-3 font-semibold">Name</th>
+              <th className="px-6 py-3 font-semibold">Expense Date</th>
               <th className="px-6 py-3 font-semibold">Category</th>
               <th className="px-6 py-3 font-semibold">Amount</th>
               <th className="px-6 py-3 font-semibold text-right">Actions</th>
@@ -131,11 +152,12 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
           </thead>
           <tbody className="divide-y divide-slate-100 dark:divide-slate-900">
             {isLoading ? (
-              <tr><td colSpan="4" className="px-6 py-8 text-center text-xs">Loading expenses...</td></tr>
+              <tr><td colSpan="5" className="px-6 py-8 text-center text-xs">Loading expenses...</td></tr>
             ) : expenses.length > 0 ? (
               expenses.map((exp) => (
                 <tr key={exp._id} className="hover:bg-slate-50/50 dark:hover:bg-slate-900/40">
                   <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">{exp.name}</td>
+                  <td className="px-6 py-4">{formatDate(exp.expenseDate)}</td>
                   <td className="px-6 py-4"><CategoryBadge category={exp.category} /></td>
                   <td className="px-6 py-4 font-semibold text-slate-900 dark:text-white">
                     {formatCurrency(exp.amount)}
@@ -148,7 +170,7 @@ export default function ExpensesPage({ onOpenAddExpenseModal }) {
                 </tr>
               ))
             ) : (
-              <tr><td colSpan="4" className="px-6 py-8 text-center text-xs text-slate-400">No expenses recorded.</td></tr>
+              <tr><td colSpan="5" className="px-6 py-8 text-center text-xs text-slate-400">No expenses recorded.</td></tr>
             )}
           </tbody>
         </table>
