@@ -2,6 +2,11 @@ import mongoose from 'mongoose';
 import Expense from '../models/Expense.js';
 import Budget from '../models/Budget.js';
 
+const getLocalDateBoundary = (dateString, timezoneOffsetMinutes, addDays = 0) => {
+  const [year, month, day] = dateString.split('-').map(Number);
+  return new Date(Date.UTC(year, month - 1, day + addDays) - timezoneOffsetMinutes * 60 * 1000);
+};
+
 export const getDashboardSummary = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -68,19 +73,28 @@ export const getDashboardSummary = async (req, res) => {
 export const getExpenses = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { page = 1, limit = 10, category, startDate, endDate } = req.query;
+    const { page = 1, limit = 10, category, search, sort = 'newest', startDate, endDate, timezoneOffset = 0 } = req.query;
     const skip = (page - 1) * limit;
+    const timezoneOffsetMinutes = Number(timezoneOffset) || 0;
 
     const filter = { userId };
     if (category) filter.category = category;
+    if (search) filter.name = { $regex: search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' };
     if (startDate || endDate) {
       filter.expenseDate = {};
-      if (startDate) filter.expenseDate.$gte = new Date(startDate);
-      if (endDate) filter.expenseDate.$lte = new Date(endDate);
+      if (startDate) filter.expenseDate.$gte = getLocalDateBoundary(startDate, timezoneOffsetMinutes);
+      if (endDate) filter.expenseDate.$lt = getLocalDateBoundary(endDate, timezoneOffsetMinutes, 1);
     }
 
+    const sortOptions = {
+      newest: { expenseDate: -1 },
+      oldest: { expenseDate: 1 },
+      highest: { amount: -1 },
+      lowest: { amount: 1 }
+    };
+
     const [expenses, total] = await Promise.all([
-      Expense.find(filter).sort({ expenseDate: -1 }).skip(skip).limit(Number(limit)),
+      Expense.find(filter).sort(sortOptions[sort] || sortOptions.newest).skip(skip).limit(Number(limit)),
       Expense.countDocuments(filter)
     ]);
 

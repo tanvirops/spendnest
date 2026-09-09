@@ -2,7 +2,6 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { 
-  FiDollarSign, 
   FiCalendar, 
   FiPieChart, 
   FiPlus, 
@@ -15,13 +14,17 @@ import {
 import axiosClient from '../api/axiosClient';
 import { CategoryBadge } from '../utils/categoryIcons';
 import PageTitle from '../utils/PageTitle';
-import { formatCurrency, formatDate } from '../utils/baseUtils';
+import { formatCurrency, formatDate, findCurrencyIcon } from '../utils/baseUtils';
+import { useProfile } from '../hooks/useProfile';
 
 
 
 
 
 export default function Dashboard({ onOpenAddExpenseModal }) {
+  const { user } = useProfile();
+  const activeCurrency = user?.data?.currency || localStorage.getItem('user_currency') || 'BDT';
+
   // Fetch Dashboard Analytics Summary
   const { data: summaryData, isLoading: isSummaryLoading, isError: isSummaryError, error: summaryError } = useQuery({
   queryKey: ['dashboard-summary'],
@@ -129,8 +132,8 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Total Spending
             </span>
-            <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300">
-              <FiDollarSign className="w-4 h-4" />
+            <div className="p-2 rounded-lg bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300 text-sm font-bold">
+              {findCurrencyIcon(activeCurrency)}
             </div>
           </div>
           <div className="mt-3">
