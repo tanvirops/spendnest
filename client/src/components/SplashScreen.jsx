@@ -11,16 +11,19 @@ export default function SplashScreen({ onFinish }) {
   }, [onFinish]);
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950 animate-splash-fadeout" style={{ animationDelay: '1.5s' }}>
+    <div
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-950 animate-splash-fadeout"
+      style={{ animationDelay: '1.5s' }}
+    >
       {/* Main Content Container */}
       <div className="relative flex flex-col items-center gap-4 animate-splash-scalein">
         {/* Logo Container */}
         <div className="relative">
           <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 p-3 shadow-2xl flex items-center justify-center">
-            <img 
-              src="/apple-touch-icon.png" 
-              alt="SpendNest" 
-              className="w-20 h-20 object-contain drop-shadow-lg" 
+            <img
+              src="/apple-touch-icon.png"
+              alt="SpendNest"
+              className="w-20 h-20 object-contain drop-shadow-lg"
             />
           </div>
           {/* Animated ring */}
@@ -40,7 +43,9 @@ export default function SplashScreen({ onFinish }) {
       </div>
 
       {/* Loading Text */}
-      <p className="absolute bottom-8 text-xs text-slate-500 tracking-widest uppercase">Loading...</p>
+      <p className="absolute bottom-8 text-xs text-slate-500 tracking-widest uppercase">
+        Loading...
+      </p>
     </div>
   );
 }

@@ -8,30 +8,30 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: [
-        'favicon.ico', 
+        'favicon.ico',
         'favicon.svg',
         'favicon-96x96.png',
         'apple-touch-icon.png',
         'web-app-manifest-192x192.png',
-        'web-app-manifest-512x512.png'
+        'web-app-manifest-512x512.png',
       ],
       workbox: {
         navigateFallbackDenylist: [/^\/api\//],
         cleanupOutdatedCaches: true,
       },
       manifest: false, // Use site.webmanifest instead
-      manifestFilename: 'site.webmanifest'
-    })
+      manifestFilename: 'site.webmanifest',
+    }),
   ],
   server: {
     port: 5173,
     open: true,
-     proxy: {
-      "/api": {
-        target: "http://localhost:3042",
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3042',
         changeOrigin: true,
         secure: false,
-      }
-    }
-  }
+      },
+    },
+  },
 });

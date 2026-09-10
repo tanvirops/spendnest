@@ -34,10 +34,10 @@ export default function OAuthSuccess() {
     console.log('OAuthSuccess - final token value:', token);
     if (token) {
       localStorage.setItem('auth_token', token);
-      toast.success('Logged in with Google', {id: 'oauth'});
+      toast.success('Logged in with Google', { id: 'oauth' });
       navigate('/');
     } else {
-    //   toast.error('OAuth failed: missing token', {id: 'oauth'});
+      //   toast.error('OAuth failed: missing token', {id: 'oauth'});
       // keep user on page for debugging instead of immediate redirect
     }
   }, [navigate]);

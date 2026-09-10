@@ -2,7 +2,7 @@ name: CI/CD pipeline
 on:
   pull_request:
     types: [closed]
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   test-client:
@@ -14,7 +14,7 @@ jobs:
       - name: Use Node 20
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '20.19.0'
       - name: Install client deps
         working-directory: ./client
         run: npm ci
@@ -34,7 +34,7 @@ jobs:
       - name: Use Node 20
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: '20.19.0'
       - name: Install server deps
         working-directory: ./server
         run: npm ci
@@ -53,7 +53,7 @@ jobs:
       EXPENSE_CLOUDFLARE_CERT: ${{ vars.EXPENSE_TANVIR_CLOUDFLARE_CERTIFICATE }}
       EXPENSE_CLOUDFLARE_KEY: ${{ vars.EXPENSE_TANVIR_CLOUDFLARE_PRIVATE_KEY }}
     steps:
-      - name: Check App Directory Exist Or Not 
+      - name: Check App Directory Exist Or Not
         run: |
           if [ ! -d "$EXPENSE_TRACKER_DIR" ]; then
             echo "Directory $EXPENSE_TRACKER_DIR does not exist. Creating it..."

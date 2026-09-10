@@ -1,0 +1,7 @@
+node_modules/
+dist/
+client/package-lock.json
+server/package-lock.json
+package-lock.json
+.env
+.env.*

@@ -1,0 +1,25 @@
+{
+  "name": "spendnest",
+  "private": true,
+  "version": "1.0.0",
+  "engines": {
+    "node": ">=20.19.0"
+  },
+  "scripts": {
+    "prepare": "husky",
+    "format": "prettier --write \"client/src/**/*.{js,jsx,css}\" \"server/src/**/*.js\" \"server/test/**/*.js\" \"*.{js,json,yml,yaml,md}\" \"client/*.{js,json,md}\" \"server/*.{js,json,md}\"",
+    "format:check": "prettier --check \"client/src/**/*.{js,jsx,css}\" \"server/src/**/*.js\" \"server/test/**/*.js\" \"*.{js,json,yml,yaml,md}\" \"client/*.{js,json,md}\" \"server/*.{js,json,md}\"",
+    "format:staged": "lint-staged",
+    "verify": "npm run verify:client && npm run verify:server",
+    "verify:client": "npm --prefix client audit --audit-level=moderate && npm --prefix client run build",
+    "verify:server": "npm --prefix server audit --audit-level=moderate && npm --prefix server test"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2"
+  },
+  "lint-staged": {
+    "**/*.{js,jsx,css,json,yml,yaml,md}": "prettier --write"
+  }
+}

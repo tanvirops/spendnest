@@ -6,7 +6,7 @@ import {
   createExpense,
   updateExpense,
   deleteExpense,
-  getExpenseCategories
+  getExpenseCategories,
 } from '../controllers/expense.controller.js';
 import { authenticateJWT } from '../middleware/auth.js';
 

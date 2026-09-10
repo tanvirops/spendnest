@@ -13,20 +13,19 @@ export default function LoginPage() {
     try {
       const res = await axiosClient.post('/auth/login', data);
       localStorage.setItem('auth_token', res.data.token);
-      toast.success('Logged in successfully!', {id: 'login'});
+      toast.success('Logged in successfully!', { id: 'login' });
       navigate('/');
     } catch (err) {
-      toast.error(err.response?.data?.message || 'Login failed', {id: 'login'});
+      toast.error(err.response?.data?.message || 'Login failed', { id: 'login' });
     }
   };
 
-  
   const googleAuthUrl = `/api/auth/google`;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-900 p-4">
-      <PageTitle 
-        title="Login" 
+      <PageTitle
+        title="Login"
         description="Sign in to your SpendNest account to access your personal finance tracker and manage your expenses."
         keywords="login, sign in, authentication, expense tracker"
       />
@@ -38,7 +37,9 @@ export default function LoginPage() {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Email Address</label>
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+              Email Address
+            </label>
             <input
               type="email"
               {...register('email', { required: true })}
@@ -48,7 +49,9 @@ export default function LoginPage() {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Password</label>
+            <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+              Password
+            </label>
             <input
               type="password"
               {...register('password', { required: true })}
@@ -57,7 +60,10 @@ export default function LoginPage() {
             />
           </div>
 
-          <button type="submit" className="w-full py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold rounded-lg text-sm">
+          <button
+            type="submit"
+            className="w-full py-2.5 bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-semibold rounded-lg text-sm"
+          >
             Sign In
           </button>
         </form>
@@ -74,7 +80,10 @@ export default function LoginPage() {
         </div> */}
 
         <p className="text-center text-xs text-slate-500">
-          Don't have an account? <Link to="/register" className="text-slate-900 dark:text-white font-semibold">Register</Link>
+          Don't have an account?{' '}
+          <Link to="/register" className="text-slate-900 dark:text-white font-semibold">
+            Register
+          </Link>
         </p>
       </div>
     </div>

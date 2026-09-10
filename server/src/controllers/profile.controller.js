@@ -63,7 +63,9 @@ export const changePassword = async (req, res) => {
 
     // Check if user has password (not OAuth-only account)
     if (!user.password) {
-      return res.status(400).json({ success: false, message: 'Cannot change password for OAuth accounts' });
+      return res
+        .status(400)
+        .json({ success: false, message: 'Cannot change password for OAuth accounts' });
     }
 
     // Verify current password
@@ -89,7 +91,9 @@ export const deleteAccount = async (req, res) => {
     const { password } = req.body;
 
     if (!password) {
-      return res.status(400).json({ success: false, message: 'Password is required to delete account' });
+      return res
+        .status(400)
+        .json({ success: false, message: 'Password is required to delete account' });
     }
 
     const user = await User.findById(req.user.id);
@@ -135,7 +139,11 @@ export const updateEmail = async (req, res) => {
     // In a real app, generate a verification token and send email
 
     await user.save();
-    res.json({ success: true, data: user, message: 'Email updated. Please verify your new email.' });
+    res.json({
+      success: true,
+      data: user,
+      message: 'Email updated. Please verify your new email.',
+    });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }

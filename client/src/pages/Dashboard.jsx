@@ -1,15 +1,15 @@
 // client/src/pages/Dashboard.jsx
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { 
-  FiCalendar, 
-  FiPieChart, 
-  FiPlus, 
-  FiAlertTriangle, 
+import {
+  FiCalendar,
+  FiPieChart,
+  FiPlus,
+  FiAlertTriangle,
   FiArrowUpRight,
   FiLayers,
   FiClock,
-  FiCheckCircle
+  FiCheckCircle,
 } from 'react-icons/fi';
 import axiosClient from '../api/axiosClient';
 import { CategoryBadge } from '../utils/categoryIcons';
@@ -17,17 +17,18 @@ import PageTitle from '../utils/PageTitle';
 import { formatCurrency, formatDate, findCurrencyIcon } from '../utils/baseUtils';
 import { useProfile } from '../hooks/useProfile';
 
-
-
-
-
 export default function Dashboard({ onOpenAddExpenseModal }) {
   const { user } = useProfile();
   const activeCurrency = user?.data?.currency || localStorage.getItem('user_currency') || 'BDT';
 
   // Fetch Dashboard Analytics Summary
-  const { data: summaryData, isLoading: isSummaryLoading, isError: isSummaryError, error: summaryError } = useQuery({
-  queryKey: ['dashboard-summary'],
+  const {
+    data: summaryData,
+    isLoading: isSummaryLoading,
+    isError: isSummaryError,
+    error: summaryError,
+  } = useQuery({
+    queryKey: ['dashboard-summary'],
     queryFn: async () => {
       const { data } = await axiosClient.get('/expenses/dashboard');
       return data?.data;
@@ -53,32 +54,39 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
     remainingBudget: 0,
     budgetUsagePercent: 0,
     alertLevel: 'NORMAL',
-    categoryBreakdown: []
+    categoryBreakdown: [],
   };
 
   const getAlertBadge = () => {
-  const baseStyle = "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold border";
-  
-  if (summary.alertLevel === 'EXCEEDED') {
+    const baseStyle =
+      'inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold border';
+
+    if (summary.alertLevel === 'EXCEEDED') {
+      return (
+        <span
+          className={`${baseStyle} bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border-rose-200 dark:border-rose-900`}
+        >
+          <FiAlertTriangle className="w-3 h-3 shrink-0" /> Exceeded
+        </span>
+      );
+    }
+    if (summary.alertLevel === 'WARNING_90') {
+      return (
+        <span
+          className={`${baseStyle} bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400 border-amber-200 dark:border-amber-900`}
+        >
+          <FiAlertTriangle className="w-3 h-3 shrink-0" /> 90% Used
+        </span>
+      );
+    }
     return (
-      <span className={`${baseStyle} bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border-rose-200 dark:border-rose-900`}>
-        <FiAlertTriangle className="w-3 h-3 shrink-0" /> Exceeded
+      <span
+        className={`${baseStyle} bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900`}
+      >
+        <FiCheckCircle className="w-3 h-3 shrink-0" /> On Track
       </span>
     );
-  }
-  if (summary.alertLevel === 'WARNING_90') {
-    return (
-      <span className={`${baseStyle} bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400 border-amber-200 dark:border-amber-900`}>
-        <FiAlertTriangle className="w-3 h-3 shrink-0" /> 90% Used
-      </span>
-    );
-  }
-  return (
-    <span className={`${baseStyle} bg-emerald-50 text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900`}>
-      <FiCheckCircle className="w-3 h-3 shrink-0" /> On Track
-    </span>
-  );
-};
+  };
 
   const getProgressBarColor = () => {
     if (summary.budgetUsagePercent >= 100) return 'bg-rose-500';
@@ -100,8 +108,8 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
 
   return (
     <div className="space-y-6">
-      <PageTitle 
-        title="Dashboard" 
+      <PageTitle
+        title="Dashboard"
         description="Track your spending trends, monitor budget metrics, and manage your personal finances with SpendNest."
         keywords="dashboard, budget, spending, expenses, financial overview"
       />
@@ -144,7 +152,9 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
                 {formatCurrency(summary.totalExpense)}
               </p>
             )}
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Lifetime recorded expenses</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Lifetime recorded expenses
+            </p>
           </div>
         </div>
 
@@ -166,7 +176,9 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
                 {formatCurrency(summary.monthlyExpense)}
               </p>
             )}
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Current calendar month</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+              Current calendar month
+            </p>
           </div>
         </div>
 
@@ -289,9 +301,10 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
           <div className="mt-4 space-y-4">
             {summary.categoryBreakdown && summary.categoryBreakdown.length > 0 ? (
               summary.categoryBreakdown.slice(0, 4).map((cat) => {
-                const categoryPercent = summary.monthlyExpense > 0
-                  ? Math.round((cat.total / summary.monthlyExpense) * 100)
-                  : 0;
+                const categoryPercent =
+                  summary.monthlyExpense > 0
+                    ? Math.round((cat.total / summary.monthlyExpense) * 100)
+                    : 0;
 
                 return (
                   <div key={cat._id} className="space-y-1.5">
@@ -329,9 +342,7 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
             <h2 className="text-base font-semibold text-slate-900 dark:text-white">
               Recent Transactions
             </h2>
-            <p className="text-xs text-slate-500 dark:text-slate-400">
-              Latest expenses recorded
-            </p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Latest expenses recorded</p>
           </div>
           <a
             href="/expenses"
@@ -357,19 +368,32 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
               {isExpensesLoading ? (
                 Array.from({ length: 4 }).map((_, idx) => (
                   <tr key={idx} className="animate-pulse">
-                    <td className="px-6 py-4"><div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-32" /></td>
-                    <td className="px-6 py-4"><div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-20" /></td>
-                    <td className="px-6 py-4"><div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-24" /></td>
-                    <td className="px-6 py-4 text-right"><div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-16 ml-auto" /></td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-32" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-20" />
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-24" />
+                    </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-16 ml-auto" />
+                    </td>
                   </tr>
                 ))
               ) : recentExpenses.length > 0 ? (
                 recentExpenses.map((expense) => (
-                  <tr key={expense._id} className="hover:bg-slate-50/60 dark:hover:bg-slate-900/30 transition-colors">
+                  <tr
+                    key={expense._id}
+                    className="hover:bg-slate-50/60 dark:hover:bg-slate-900/30 transition-colors"
+                  >
                     <td className="px-6 py-4 font-medium text-slate-900 dark:text-white">
                       {expense.name}
                       {expense.notes && (
-                        <p className="text-xs text-slate-400 font-normal truncate max-w-xs">{expense.notes}</p>
+                        <p className="text-xs text-slate-400 font-normal truncate max-w-xs">
+                          {expense.notes}
+                        </p>
                       )}
                     </td>
                     <td className="px-6 py-4">
@@ -423,9 +447,7 @@ export default function Dashboard({ onOpenAddExpenseModal }) {
               </div>
             ))
           ) : (
-            <div className="p-6 text-center text-xs text-slate-400">
-              No transactions found.
-            </div>
+            <div className="p-6 text-center text-xs text-slate-400">No transactions found.</div>
           )}
         </div>
       </div>

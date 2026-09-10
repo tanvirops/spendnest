@@ -17,7 +17,7 @@ if ('serviceWorker' in navigator) {
       },
       onRegisterError(err) {
         console.error('SW registration error:', err);
-      }
+      },
     });
   } catch (e) {
     console.warn('PWA registerSW unavailable', e.message);
@@ -36,7 +36,7 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
       retry: 1,
       staleTime: 5 * 60 * 1000,
-      queryFn: getProfile
+      queryFn: getProfile,
     },
   },
 });
@@ -51,5 +51,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         </BrowserRouter>
       </QueryClientProvider>
     </HelmetProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );

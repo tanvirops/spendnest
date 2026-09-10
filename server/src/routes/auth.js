@@ -6,12 +6,10 @@ import User from '../models/User.js';
 import { authenticateJWT } from '../middleware/auth.js';
 import { getProfile, changePassword } from '../controllers/profile.controller.js';
 
-
 import crypto from 'crypto';
 if (!globalThis.crypto) {
   globalThis.crypto = crypto;
 }
-
 
 const router = express.Router();
 
@@ -19,7 +17,7 @@ const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, email: user.email, isVerified: user.isVerified },
     process.env.JWT_SECRET,
-    { expiresIn: '7d' }
+    { expiresIn: '7d' },
   );
 };
 
@@ -43,7 +41,7 @@ router.post('/register', async (req, res) => {
     // Note: Send `verificationToken` via Nodemailer to user's email here
     res.status(201).json({
       message: 'Registration successful. Check your email for verification link.',
-      verificationToken, 
+      verificationToken,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -87,15 +85,24 @@ router.post('/login', async (req, res) => {
 });
 
 // Initiate Google OAuth
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
+router.get(
+  '/google',
+  passport.authenticate('google', { scope: ['profile', 'email'], session: false }),
+);
 
 // Google OAuth Callback
 router.get(
   '/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: `${process.env.CLIENT_URL}/oauth/success?error=1` }),
+  passport.authenticate('google', {
+    session: false,
+    failureRedirect: `${process.env.CLIENT_URL}/oauth/success?error=1`,
+  }),
   (req, res) => {
     try {
-      console.log('Google callback - req.user:', req.user ? { id: req.user._id, email: req.user.email } : null);
+      console.log(
+        'Google callback - req.user:',
+        req.user ? { id: req.user._id, email: req.user.email } : null,
+      );
       const token = generateToken(req.user);
       const masked = token ? `${token.slice(0, 8)}...` : 'no-token';
       console.log('Google callback - generated token:', masked);
@@ -105,7 +112,7 @@ router.get(
       console.error('Google callback error:', err.message);
       res.redirect(`${process.env.CLIENT_URL}/oauth/success?error=1`);
     }
-  }
+  },
 );
 
 // Profile endpoint aliases

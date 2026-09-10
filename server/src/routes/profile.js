@@ -4,7 +4,7 @@ import {
   updateProfile,
   changePassword,
   deleteAccount,
-  updateEmail
+  updateEmail,
 } from '../controllers/profile.controller.js';
 import { authenticateJWT } from '../middleware/auth.js';
 

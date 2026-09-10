@@ -6,16 +6,17 @@ import { Helmet } from 'react-helmet-async';
  * @param {string} title - Page title
  * @param {string} description - Meta description (optional)
  */
-export function PageTitle({ 
-  title, 
+export function PageTitle({
+  title,
   description = 'SpendNest - Personal Finance Tracker',
-  keywords = 'expense tracker, budget planner, personal finance app, spending dashboard, monthly budget'
+  keywords = 'expense tracker, budget planner, personal finance app, spending dashboard, monthly budget',
 }) {
   const appName = 'SpendNest';
   const fullTitle = title ? `${title} | ${appName}` : appName;
-  const currentUrl = typeof window !== 'undefined'
-    ? `${window.location.origin}${window.location.pathname}${window.location.search}`
-    : 'https://spendnest.app';
+  const currentUrl =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}${window.location.pathname}${window.location.search}`
+      : 'https://spendnest.app';
 
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -51,9 +52,7 @@ export function PageTitle({
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content="/web-app-manifest-512x512.png" />
       <link rel="canonical" href={currentUrl} />
-      <script type="application/ld+json">
-        {JSON.stringify(jsonLd)}
-      </script>
+      <script type="application/ld+json">{JSON.stringify(jsonLd)}</script>
     </Helmet>
   );
 }
