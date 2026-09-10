@@ -1,4 +1,4 @@
-import { FiGrid, FiPieChart, FiUser } from "react-icons/fi";
+import { FiGrid, FiPieChart, FiUser } from 'react-icons/fi';
 
 const getPreferredCurrency = () => {
   if (typeof window === 'undefined') return 'BDT';
@@ -24,11 +24,11 @@ export const formatDate = (dateStr) => {
 };
 
 export const currencyOptions = [
-  { value: "BDT", icon: "৳", label: "BDT - Bangladeshi Taka" },
-  { value: "USD", icon: "$", label: "USD - US Dollar" },
-  { value: "EUR", icon: "€", label: "EUR - Euro" },
-  { value: "GBP", icon: "£", label: "GBP - British Pound" },
-  { value: "INR", icon: "₹", label: "INR - Indian Rupee" },
+  { value: 'BDT', icon: '৳', label: 'BDT - Bangladeshi Taka' },
+  { value: 'USD', icon: '$', label: 'USD - US Dollar' },
+  { value: 'EUR', icon: '€', label: 'EUR - Euro' },
+  { value: 'GBP', icon: '£', label: 'GBP - British Pound' },
+  { value: 'INR', icon: '₹', label: 'INR - Indian Rupee' },
 ];
 
 export const findCurrencyIcon = (currency) => {
@@ -45,10 +45,20 @@ export const profileTabOptions = [
 ];
 
 export const getNavItems = (currency = getPreferredCurrency()) => [
-  { label: "Dashboard", path: "/", icon: FiGrid, iconType: "icon" },
-  { label: "Expenses", path: "/expenses", iconType: "currency", currencySymbol: findCurrencyIcon(currency) },
-  { label: "Budget", path: "/budget", icon: FiPieChart, iconType: "icon" },
-  { label: "Profile", path: { pathname: "/profile", search: "?tab=profile" }, icon: FiUser, iconType: "icon" },
+  { label: 'Dashboard', path: '/', icon: FiGrid, iconType: 'icon' },
+  {
+    label: 'Expenses',
+    path: '/expenses',
+    iconType: 'currency',
+    currencySymbol: findCurrencyIcon(currency),
+  },
+  { label: 'Budget', path: '/budget', icon: FiPieChart, iconType: 'icon' },
+  {
+    label: 'Profile',
+    path: { pathname: '/profile', search: '?tab=profile' },
+    icon: FiUser,
+    iconType: 'icon',
+  },
 ];
 
 export const navItems = getNavItems();

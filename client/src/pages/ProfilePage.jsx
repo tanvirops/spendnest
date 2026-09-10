@@ -6,8 +6,12 @@ import toast from 'react-hot-toast';
 import PageTitle from '../utils/PageTitle';
 import { changePassword, updateProfile } from '../api/profile';
 import { useProfile } from '../hooks/useProfile';
-import { currencyOptions, findCurrency, findCurrencyIcon, profileTabOptions } from '../utils/baseUtils';
-
+import {
+  currencyOptions,
+  findCurrency,
+  findCurrencyIcon,
+  profileTabOptions,
+} from '../utils/baseUtils';
 
 export default function ProfilePage() {
   const { user, refetch } = useProfile();
@@ -93,14 +97,18 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <PageTitle 
-        title="Profile" 
+      <PageTitle
+        title="Profile"
         description="Manage your account settings, personal information, and change your password on SpendNest."
         keywords="profile, account settings, user profile, password change"
       />
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">Account Profile</h1>
-        <p className="text-sm text-slate-500 dark:text-slate-400">Manage your profile details and security settings.</p>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
+          Account Profile
+        </h1>
+        <p className="text-sm text-slate-500 dark:text-slate-400">
+          Manage your profile details and security settings.
+        </p>
       </div>
 
       <div className="rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950 shadow-sm overflow-hidden">
@@ -129,7 +137,9 @@ export default function ProfilePage() {
                   {user?.data?.name ? user.data.name[0] : <FiUser className="w-6 h-6" />}
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">{user?.data?.name || 'User'}</h2>
+                  <h2 className="text-lg font-bold text-slate-900 dark:text-white">
+                    {user?.data?.name || 'User'}
+                  </h2>
                   <p className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-0.5">
                     <FiMail className="w-3.5 h-3.5" /> {user?.data?.email}
                   </p>
@@ -139,34 +149,44 @@ export default function ProfilePage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
                   <span className="text-slate-400 block mb-1">Account Role</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200 uppercase">{user?.data?.role || 'User'}</span>
+                  <span className="font-semibold text-slate-800 dark:text-slate-200 uppercase">
+                    {user?.data?.role || 'User'}
+                  </span>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
                   <span className="text-slate-400 block mb-1">Status</span>
-                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">Active</span>
+                  <span className="font-semibold text-emerald-600 dark:text-emerald-400">
+                    Active
+                  </span>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
                   <span className="text-slate-400 block mb-1">Account Verified</span>
-                  <span className={`font-semibold ${user?.data?.isVerified ? 'text-emerald-600 dark:text-emerald-400' : 'text-yellow-600 dark:text-yellow-400'}`}>
+                  <span
+                    className={`font-semibold ${user?.data?.isVerified ? 'text-emerald-600 dark:text-emerald-400' : 'text-yellow-600 dark:text-yellow-400'}`}
+                  >
                     {user?.data?.isVerified ? 'Yes' : 'No'}
                   </span>
                 </div>
                 <div className="p-3 bg-slate-50 dark:bg-slate-900 rounded-lg">
                   <span className="text-slate-400 block mb-1">Currency</span>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">
-                    {findCurrencyIcon(user?.data?.currency || 'BDT')} {" "}
-                     {findCurrency(user?.data?.currency || 'BDT')?.label || 'Bangladeshi Taka'}
+                    {findCurrencyIcon(user?.data?.currency || 'BDT')}{' '}
+                    {findCurrency(user?.data?.currency || 'BDT')?.label || 'Bangladeshi Taka'}
                   </span>
                 </div>
               </div>
             </div>
 
             <div className=" border-t border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-950 space-y-4">
-              <h3 className="text-base font-bold text-slate-900 dark:text-white mt-2">Profile Details</h3>
+              <h3 className="text-base font-bold text-slate-900 dark:text-white mt-2">
+                Profile Details
+              </h3>
 
               <form onSubmit={handleProfileSubmit(onUpdateProfile)} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Full Name</label>
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                    Full Name
+                  </label>
                   <input
                     type="text"
                     {...registerProfile('name', {
@@ -175,11 +195,15 @@ export default function ProfilePage() {
                     })}
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none"
                   />
-                  {profileErrors.name && <p className="text-xs text-rose-500 mt-1">{profileErrors.name.message}</p>}
+                  {profileErrors.name && (
+                    <p className="text-xs text-rose-500 mt-1">{profileErrors.name.message}</p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Preferred Currency</label>
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                    Preferred Currency
+                  </label>
                   <select
                     {...registerProfile('currency', { required: 'Currency is required' })}
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none"
@@ -190,7 +214,9 @@ export default function ProfilePage() {
                       </option>
                     ))}
                   </select>
-                  {profileErrors.currency && <p className="text-xs text-rose-500 mt-1">{profileErrors.currency.message}</p>}
+                  {profileErrors.currency && (
+                    <p className="text-xs text-rose-500 mt-1">{profileErrors.currency.message}</p>
+                  )}
                 </div>
 
                 <button
@@ -212,17 +238,27 @@ export default function ProfilePage() {
 
               <form onSubmit={handlePasswordSubmit(onChangePassword)} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Current Password</label>
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                    Current Password
+                  </label>
                   <input
                     type="password"
-                    {...registerPassword('currentPassword', { required: 'Current password is required' })}
+                    {...registerPassword('currentPassword', {
+                      required: 'Current password is required',
+                    })}
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none"
                   />
-                  {passwordErrors.currentPassword && <p className="text-xs text-rose-500 mt-1">{passwordErrors.currentPassword.message}</p>}
+                  {passwordErrors.currentPassword && (
+                    <p className="text-xs text-rose-500 mt-1">
+                      {passwordErrors.currentPassword.message}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">New Password</label>
+                  <label className="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">
+                    New Password
+                  </label>
                   <input
                     type="password"
                     {...registerPassword('newPassword', {
@@ -231,7 +267,11 @@ export default function ProfilePage() {
                     })}
                     className="w-full px-3 py-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 text-sm focus:outline-none"
                   />
-                  {passwordErrors.newPassword && <p className="text-xs text-rose-500 mt-1">{passwordErrors.newPassword.message}</p>}
+                  {passwordErrors.newPassword && (
+                    <p className="text-xs text-rose-500 mt-1">
+                      {passwordErrors.newPassword.message}
+                    </p>
+                  )}
                 </div>
 
                 <button

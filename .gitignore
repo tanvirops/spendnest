@@ -1,9 +1,10 @@
 /server/node_modules
 /client/node_modules
+/node_modules
+config.bat
+.env
 /client/dist
 /client/.env
 /server/dist
 /server/.env
 ./deploy.sh
-config.bat
-node_modules

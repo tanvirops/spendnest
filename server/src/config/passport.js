@@ -5,12 +5,15 @@ import User from '../models/User.js';
 const hasGoogleId = Boolean(process.env.GOOGLE_CLIENT_ID);
 const hasGoogleSecret = Boolean(process.env.GOOGLE_CLIENT_SECRET);
 const maskedId = hasGoogleId ? `${process.env.GOOGLE_CLIENT_ID.slice(0, 8)}...` : 'not-set';
-const maskedSecret = hasGoogleSecret ? `${process.env.GOOGLE_CLIENT_SECRET.slice(0, 6)}...` : 'not-set';
+const maskedSecret = hasGoogleSecret
+  ? `${process.env.GOOGLE_CLIENT_SECRET.slice(0, 6)}...`
+  : 'not-set';
 console.log(`Google OAuth - CLIENT_ID set: ${hasGoogleId}, CLIENT_SECRET set: ${hasGoogleSecret}`);
 console.log(`Google OAuth - CLIENT_ID: ${maskedId}, CLIENT_SECRET: ${maskedSecret}`);
 
 // Build absolute callback URL (passport-google-oauth20 requires absolute callback)
-const callbackURL = process.env.GOOGLE_REDIRECT_URI || `${process.env.CLIENT_URL}/api/auth/google/callback`;
+const callbackURL =
+  process.env.GOOGLE_REDIRECT_URI || `${process.env.CLIENT_URL}/api/auth/google/callback`;
 
 // Only configure Google strategy if credentials are available
 if (hasGoogleId && hasGoogleSecret) {
@@ -52,8 +55,8 @@ if (hasGoogleId && hasGoogleSecret) {
           } catch (err) {
             return done(err, null);
           }
-        }
-      )
+        },
+      ),
     );
     console.log('Google OAuth strategy registered.');
   } catch (err) {

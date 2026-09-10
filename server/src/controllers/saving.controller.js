@@ -28,7 +28,7 @@ export const getTotalSavings = async (req, res) => {
     const userId = req.user.id;
     const result = await Saving.aggregate([
       { $match: { userId: new mongoose.Types.ObjectId(userId) } },
-      { $group: { _id: null, total: { $sum: '$amount' } } }
+      { $group: { _id: null, total: { $sum: '$amount' } } },
     ]);
 
     const total = result[0]?.total || 0;
@@ -41,12 +41,13 @@ export const getTotalSavings = async (req, res) => {
 // Get saving by month
 export const getSavingByMonth = async (req, res) => {
   try {
-    const saving = await Saving.findOne({ 
-      userId: req.user.id, 
-      month: req.params.month 
+    const saving = await Saving.findOne({
+      userId: req.user.id,
+      month: req.params.month,
     });
 
-    if (!saving) return res.status(404).json({ success: false, message: 'Saving record not found' });
+    if (!saving)
+      return res.status(404).json({ success: false, message: 'Saving record not found' });
     res.json({ success: true, data: saving });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -74,10 +75,10 @@ export const upsertSaving = async (req, res) => {
           userId: req.user.id,
           month,
           amount: Number(amount),
-          note: note || ''
-        }
+          note: note || '',
+        },
       },
-      { upsert: true, new: true }
+      { upsert: true, new: true },
     );
 
     res.json({ success: true, data: saving });
@@ -89,12 +90,13 @@ export const upsertSaving = async (req, res) => {
 // Delete saving record
 export const deleteSaving = async (req, res) => {
   try {
-    const saving = await Saving.findOneAndDelete({ 
-      _id: req.params.id, 
-      userId: req.user.id 
+    const saving = await Saving.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.user.id,
     });
 
-    if (!saving) return res.status(404).json({ success: false, message: 'Saving record not found' });
+    if (!saving)
+      return res.status(404).json({ success: false, message: 'Saving record not found' });
     res.json({ success: true, message: 'Saving record deleted successfully' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

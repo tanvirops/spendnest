@@ -4,7 +4,7 @@ import {
   getTotalSavings,
   getSavingByMonth,
   upsertSaving,
-  deleteSaving
+  deleteSaving,
 } from '../controllers/saving.controller.js';
 import { authenticateJWT } from '../middleware/auth.js';
 

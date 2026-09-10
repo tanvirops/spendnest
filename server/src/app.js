@@ -14,11 +14,12 @@ const app = express();
 
 // app.set('trust proxy', true); // Trust reverse proxy headers (e.g., X-Forwarded-For)
 
-app.use(cors({
-  // origin: process.env.CLIENT_URL || 'http://localhost:5173',
-
-  // credentials: true,
-}));
+app.use(
+  cors({
+    // origin: process.env.CLIENT_URL || 'http://localhost:5173',
+    // credentials: true,
+  }),
+);
 app.use(express.json());
 app.use(passport.initialize());
 
@@ -43,7 +44,9 @@ app.get('/api/health', (req, res) => {
 // Error handling
 app.use((err, req, res, next) => {
   console.error(err.stack);
-  res.status(err.status || 500).json({ success: false, message: err.message || 'Internal Server Error' });
+  res
+    .status(err.status || 500)
+    .json({ success: false, message: err.message || 'Internal Server Error' });
 });
 
 app.use((req, res) => {

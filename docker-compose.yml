@@ -5,7 +5,7 @@ services:
     container_name: expense-mongodb
     restart: unless-stopped
     ports:
-      - "27017:27017"
+      - '27017:27017'
     volumes:
       - mongodb_data:/data/db
 
@@ -18,7 +18,7 @@ services:
     environment:
       - MONGO_URI=mongodb://mongodb:27017/expense_tracker
     ports:
-      - "3042:3042"
+      - '3042:3042'
     restart: unless-stopped
 
   client:
@@ -28,7 +28,7 @@ services:
         - VITE_API_URL=${VITE_API_URL}
     env_file: .env
     ports:
-      - "3041:80"
+      - '3041:80'
     depends_on:
       - server
     restart: unless-stopped

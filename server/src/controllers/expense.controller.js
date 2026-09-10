@@ -18,22 +18,42 @@ export const getDashboardSummary = async (req, res) => {
     const [totalAgg, monthAgg, todayAgg, countAgg, activeBudget, categoryAgg] = await Promise.all([
       Expense.aggregate([
         { $match: { userId: new mongoose.Types.ObjectId(userId) } },
-        { $group: { _id: null, total: { $sum: '$amount' } } }
+        { $group: { _id: null, total: { $sum: '$amount' } } },
       ]),
       Expense.aggregate([
-        { $match: { userId: new mongoose.Types.ObjectId(userId), expenseDate: { $gte: startOfMonth, $lte: endOfMonth } } },
-        { $group: { _id: null, total: { $sum: '$amount' } } }
+        {
+          $match: {
+            userId: new mongoose.Types.ObjectId(userId),
+            expenseDate: { $gte: startOfMonth, $lte: endOfMonth },
+          },
+        },
+        { $group: { _id: null, total: { $sum: '$amount' } } },
       ]),
       Expense.aggregate([
-        { $match: { userId: new mongoose.Types.ObjectId(userId), expenseDate: { $gte: startOfToday } } },
-        { $group: { _id: null, total: { $sum: '$amount' } } }
+        {
+          $match: {
+            userId: new mongoose.Types.ObjectId(userId),
+            expenseDate: { $gte: startOfToday },
+          },
+        },
+        { $group: { _id: null, total: { $sum: '$amount' } } },
       ]),
       Expense.countDocuments({ userId }),
-      Budget.findOne({ userId, isActive: true, fromEffective: { $lte: now }, toEffective: { $gte: now } }),
+      Budget.findOne({
+        userId,
+        isActive: true,
+        fromEffective: { $lte: now },
+        toEffective: { $gte: now },
+      }),
       Expense.aggregate([
-        { $match: { userId: new mongoose.Types.ObjectId(userId), expenseDate: { $gte: startOfMonth, $lte: endOfMonth } } },
-        { $group: { _id: '$category', total: { $sum: '$amount' } } }
-      ])
+        {
+          $match: {
+            userId: new mongoose.Types.ObjectId(userId),
+            expenseDate: { $gte: startOfMonth, $lte: endOfMonth },
+          },
+        },
+        { $group: { _id: '$category', total: { $sum: '$amount' } } },
+      ]),
     ]);
 
     const totalExpense = totalAgg[0]?.total || 0;
@@ -42,7 +62,8 @@ export const getDashboardSummary = async (req, res) => {
     const budgetAmount = activeBudget?.amount || 0;
 
     const remainingBudget = Math.max(0, budgetAmount - monthlyExpense);
-    const budgetUsagePercent = budgetAmount > 0 ? ((monthlyExpense / budgetAmount) * 100).toFixed(1) : 0;
+    const budgetUsagePercent =
+      budgetAmount > 0 ? ((monthlyExpense / budgetAmount) * 100).toFixed(1) : 0;
 
     let alertLevel = 'NORMAL';
     if (budgetAmount > 0) {
@@ -61,8 +82,8 @@ export const getDashboardSummary = async (req, res) => {
         remainingBudget,
         budgetUsagePercent: Number(budgetUsagePercent),
         alertLevel,
-        categoryBreakdown: categoryAgg
-      }
+        categoryBreakdown: categoryAgg,
+      },
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -73,16 +94,27 @@ export const getDashboardSummary = async (req, res) => {
 export const getExpenses = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { page = 1, limit = 10, category, search, sort = 'newest', startDate, endDate, timezoneOffset = 0 } = req.query;
+    const {
+      page = 1,
+      limit = 10,
+      category,
+      search,
+      sort = 'newest',
+      startDate,
+      endDate,
+      timezoneOffset = 0,
+    } = req.query;
     const skip = (page - 1) * limit;
     const timezoneOffsetMinutes = Number(timezoneOffset) || 0;
 
     const filter = { userId };
     if (category) filter.category = category;
-    if (search) filter.name = { $regex: search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' };
+    if (search)
+      filter.name = { $regex: search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), $options: 'i' };
     if (startDate || endDate) {
       filter.expenseDate = {};
-      if (startDate) filter.expenseDate.$gte = getLocalDateBoundary(startDate, timezoneOffsetMinutes);
+      if (startDate)
+        filter.expenseDate.$gte = getLocalDateBoundary(startDate, timezoneOffsetMinutes);
       if (endDate) filter.expenseDate.$lt = getLocalDateBoundary(endDate, timezoneOffsetMinutes, 1);
     }
 
@@ -90,18 +122,21 @@ export const getExpenses = async (req, res) => {
       newest: { expenseDate: -1 },
       oldest: { expenseDate: 1 },
       highest: { amount: -1 },
-      lowest: { amount: 1 }
+      lowest: { amount: 1 },
     };
 
     const [expenses, total] = await Promise.all([
-      Expense.find(filter).sort(sortOptions[sort] || sortOptions.newest).skip(skip).limit(Number(limit)),
-      Expense.countDocuments(filter)
+      Expense.find(filter)
+        .sort(sortOptions[sort] || sortOptions.newest)
+        .skip(skip)
+        .limit(Number(limit)),
+      Expense.countDocuments(filter),
     ]);
 
     res.json({
       success: true,
       data: expenses,
-      pagination: { page: Number(page), limit: Number(limit), total }
+      pagination: { page: Number(page), limit: Number(limit), total },
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
@@ -134,7 +169,7 @@ export const createExpense = async (req, res) => {
       category,
       amount: Number(amount),
       notes: notes || '',
-      expenseDate: expenseDate ? new Date(expenseDate) : new Date()
+      expenseDate: expenseDate ? new Date(expenseDate) : new Date(),
     });
 
     await expense.save();
@@ -149,7 +184,7 @@ export const updateExpense = async (req, res) => {
   try {
     const { name, category, amount, notes, expenseDate } = req.body;
     const expense = await Expense.findOne({ _id: req.params.id, userId: req.user.id });
-    
+
     if (!expense) return res.status(404).json({ success: false, message: 'Expense not found' });
 
     if (name !== undefined) expense.name = name;
@@ -192,12 +227,14 @@ const DEFAULT_CATEGORIES = [
 export const getExpenseCategories = async (req, res) => {
   try {
     const userId = req.user.id;
-    const defaultCategoryValues = DEFAULT_CATEGORIES.map(cat => cat.value);
+    const defaultCategoryValues = DEFAULT_CATEGORIES.map((cat) => cat.value);
     const categories = await Expense.distinct('category', { userId });
 
     res.json({
       success: true,
-      data: [...new Set([...defaultCategoryValues, ...categories?.filter(Boolean)])].sort((a, b) => a.localeCompare(b))
+      data: [...new Set([...defaultCategoryValues, ...categories?.filter(Boolean)])].sort((a, b) =>
+        a.localeCompare(b),
+      ),
     });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

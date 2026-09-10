@@ -25,11 +25,13 @@ A complete Express.js backend server for the Expense Tracker application with us
 ## Installation
 
 1. Install dependencies:
+
 ```bash
 npm install
 ```
 
 2. Create a `.env` file in the root directory with the following variables:
+
 ```env
 # Server
 PORT=5000
@@ -47,6 +49,7 @@ CLIENT_URL=http://localhost:5173
 ```
 
 3. Start MongoDB (if local):
+
 ```bash
 mongod
 ```
@@ -54,11 +57,13 @@ mongod
 ## Running the Server
 
 ### Development
+
 ```bash
 npm run dev
 ```
 
 ### Production
+
 ```bash
 npm start
 ```
@@ -68,13 +73,15 @@ The server will start on `http://localhost:5000` (or the port specified in `.env
 ## API Endpoints
 
 ### Authentication Routes (`/api/auth`)
+
 - `POST /register` - Register new user
 - `POST /login` - Login with email/password
 - `GET /verify-email/:token` - Verify email address
 - `GET /google` - Initiate Google OAuth login
 - `GET /google/callback` - Google OAuth callback
 
-### Expense Routes (`/api/expenses`) - *Protected*
+### Expense Routes (`/api/expenses`) - _Protected_
+
 - `GET /dashboard` - Get dashboard summary
 - `GET /` - Get all expenses (paginated, filterable)
 - `GET /:id` - Get single expense
@@ -82,7 +89,8 @@ The server will start on `http://localhost:5000` (or the port specified in `.env
 - `PUT /:id` - Update expense
 - `DELETE /:id` - Delete expense
 
-### Budget Routes (`/api/budgets`) - *Protected*
+### Budget Routes (`/api/budgets`) - _Protected_
+
 - `GET /` - Get all budgets
 - `GET /active` - Get active budget
 - `GET /:id` - Get single budget
@@ -90,14 +98,16 @@ The server will start on `http://localhost:5000` (or the port specified in `.env
 - `PUT /:id` - Update budget
 - `DELETE /:id` - Delete budget
 
-### Saving Routes (`/api/savings`) - *Protected*
+### Saving Routes (`/api/savings`) - _Protected_
+
 - `GET /` - Get all savings (with optional year/month filter)
 - `GET /total` - Get total savings
 - `GET /:month` - Get saving by month (YYYY-MM format)
 - `POST /` - Create or update saving
 - `DELETE /:id` - Delete saving
 
-### Profile Routes (`/api/profile`) - *Protected*
+### Profile Routes (`/api/profile`) - _Protected_
+
 - `GET /` - Get user profile
 - `PUT /` - Update profile (name, avatar)
 - `POST /change-password` - Change password
@@ -105,11 +115,13 @@ The server will start on `http://localhost:5000` (or the port specified in `.env
 - `DELETE /` - Delete user account
 
 ### Health Check
+
 - `GET /api/health` - Server health check
 
 ## Request/Response Format
 
 ### Authentication Request
+
 ```json
 {
   "name": "John Doe",
@@ -119,17 +131,19 @@ The server will start on `http://localhost:5000` (or the port specified in `.env
 ```
 
 ### Expense Request
+
 ```json
 {
   "name": "Coffee",
   "category": "Food",
-  "amount": 5.50,
+  "amount": 5.5,
   "notes": "Morning coffee",
   "expenseDate": "2024-01-15"
 }
 ```
 
 ### Budget Request
+
 ```json
 {
   "type": "monthly",
@@ -140,6 +154,7 @@ The server will start on `http://localhost:5000` (or the port specified in `.env
 ```
 
 ### Saving Request
+
 ```json
 {
   "month": "2024-01",
@@ -151,6 +166,7 @@ The server will start on `http://localhost:5000` (or the port specified in `.env
 ## Authentication
 
 Protected routes require a JWT token in the Authorization header:
+
 ```
 Authorization: Bearer <your_jwt_token>
 ```
@@ -206,15 +222,17 @@ server/
 The server includes comprehensive error handling with meaningful error messages. All responses follow a consistent format:
 
 **Success Response:**
+
 ```json
 {
   "success": true,
-  "data": { /* response data */ },
+  "data": {/* response data */},
   "message": "Operation successful"
 }
 ```
 
 **Error Response:**
+
 ```json
 {
   "success": false,

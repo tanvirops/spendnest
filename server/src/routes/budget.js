@@ -5,7 +5,7 @@ import {
   getBudgetById,
   createBudget,
   updateBudget,
-  deleteBudget
+  deleteBudget,
 } from '../controllers/budget.controller.js';
 import { authenticateJWT } from '../middleware/auth.js';
 
