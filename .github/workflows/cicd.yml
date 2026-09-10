@@ -64,7 +64,8 @@ jobs:
           else
             echo "Directory $EXPENSE_TRACKER_DIR already exists."
             cd "$EXPENSE_TRACKER_DIR"
-            git pull origin main
+            git fetch --prune origin main
+            git reset --hard origin/main
           fi
 
       - name: Deploy Configuration
