@@ -107,3 +107,82 @@ latest
 ```
 
 It refuses to publish when the Git working tree is dirty, which prevents an image tag from pointing to source code that was not committed.
+
+## 7. Docker Hub repository metadata
+
+Use the following text when creating or editing the Docker Hub repositories.
+
+### `spendnest-client`
+
+**Category:** Web
+
+**Short description:**
+
+```text
+SpendNest personal expense tracker frontend built with React and Vite.
+```
+
+**Full description:**
+
+````markdown
+# SpendNest Client
+
+The SpendNest Client is the React frontend for a personal expense tracking application.
+It provides a responsive interface for managing expenses, budgets, savings, profiles, and
+authentication.
+
+## Included
+
+- React and Vite production build
+- Nginx static file server
+- SPA route fallback
+- Reverse proxy for `/api` requests
+- Immutable release and Git SHA image tags
+
+## Run
+
+```bash
+docker run --rm -p 3041:80 tanviralamdevops/spendnest-client:latest
+```
+````
+
+````
+
+### `spendnest-server`
+
+**Category:** Web
+
+**Short description:**
+
+```text
+SpendNest REST API for expenses, budgets, savings, profiles, and authentication.
+````
+
+**Full description:**
+
+````markdown
+# SpendNest Server
+
+The SpendNest Server is the Node.js and Express REST API for a personal expense tracking
+application. It provides authenticated endpoints for expenses, budgets, savings, profiles,
+and Google OAuth integration.
+
+## Included
+
+- Node.js 20 production runtime
+- Express REST API
+- MongoDB and Mongoose integration
+- JWT authentication and Google OAuth
+- Health endpoint at `/api/health`
+- Immutable release and Git SHA image tags
+
+## Run
+
+```bash
+docker run --rm --env-file .env -p 3042:5000 tanviralamdevops/spendnest-server:latest
+```
+````
+
+```
+
+```
