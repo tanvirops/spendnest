@@ -63,14 +63,13 @@ Use this `.env` pattern:
 ```dotenv
 DOCKERHUB_NAMESPACE=your-dockerhub-username
 IMAGE_TAG=sha-full-git-sha
-MONGODB_IMAGE=mongo:8.0
-MONGO_URI_DOCKER=mongodb://mongodb:27017/expense_tracker
+MONGO_URI_DOCKER=mongodb://host.docker.internal:27017/expense_tracker
 PORT=5000
 ```
 
-For a managed MongoDB service, set `MONGO_URI_DOCKER` to its connection string. Keep this file private and never commit it. Keep the MongoDB image on the same major version as the data volume; MongoDB does not support downgrading existing database files.
+The Compose stack reuses MongoDB already running on the VPS through `host.docker.internal:27017`; it does not create or replace a database container or volume. This avoids colliding with the existing MongoDB port and preserves the existing database. Ensure the existing MongoDB service is running and listening on host port `27017`. For a managed MongoDB service, set `MONGO_URI_DOCKER` to its connection string instead. Keep this file private and never commit it.
 
-For local development without Docker Hub images, run `docker compose up --build -d` from the repository root. The local default is MongoDB 7.0 because MongoDB 8.0+ currently crashes on Linux kernel 6.19 and newer. The Compose file builds the client and server images locally.
+For local development without Docker Hub images, run `docker compose up --build -d` from the repository root after starting MongoDB on the host. The Compose file builds the client and server images locally.
 
 ## 4. Pull and start a release
 
