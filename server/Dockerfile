@@ -8,8 +8,6 @@ RUN npm ci --omit=dev
 # Copy source
 COPY . .
 
-ARG MONGO_URI
-ENV MONGO_URI=$MONGO_URI
 ENV NODE_ENV=production
 
 EXPOSE 5000

@@ -1,6 +1,29 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@source '../index.html';
+@source './**/*.{js,jsx,ts,tsx}';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-expense-50: #fef2f2;
+  --color-expense-100: #fee2e2;
+  --color-expense-500: #ef4444;
+  --color-expense-600: #dc2626;
+  --color-expense-700: #b91c1c;
+  --color-income-50: #f0fdf4;
+  --color-income-100: #dcfce7;
+  --color-income-500: #22c55e;
+  --color-income-600: #16a34a;
+  --color-income-700: #15803d;
+  --color-budget-50: #fef3c7;
+  --color-budget-100: #fde68a;
+  --color-budget-500: #f59e0b;
+  --color-budget-600: #d97706;
+  --color-budget-700: #b45309;
+  --font-sans: Inter, system-ui, sans-serif;
+  --spacing-128: 32rem;
+}
 
 @layer base {
   body {

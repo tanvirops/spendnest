@@ -1,15 +1,8 @@
 import passport from 'passport';
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import User from '../models/User.js';
-// Diagnostic: show whether env vars are present and log masked values
 const hasGoogleId = Boolean(process.env.GOOGLE_CLIENT_ID);
 const hasGoogleSecret = Boolean(process.env.GOOGLE_CLIENT_SECRET);
-const maskedId = hasGoogleId ? `${process.env.GOOGLE_CLIENT_ID.slice(0, 8)}...` : 'not-set';
-const maskedSecret = hasGoogleSecret
-  ? `${process.env.GOOGLE_CLIENT_SECRET.slice(0, 6)}...`
-  : 'not-set';
-console.log(`Google OAuth - CLIENT_ID set: ${hasGoogleId}, CLIENT_SECRET set: ${hasGoogleSecret}`);
-console.log(`Google OAuth - CLIENT_ID: ${maskedId}, CLIENT_SECRET: ${maskedSecret}`);
 
 // Build absolute callback URL (passport-google-oauth20 requires absolute callback)
 const callbackURL =

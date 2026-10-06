@@ -1,29 +1,56 @@
+name: spendnest
 services:
   mongodb:
-    image: mongo:8
-    container_name: expense-mongodb
+    image: ${MONGODB_IMAGE:-mongo:7.0}
     restart: unless-stopped
+    ports:
+      - '127.0.0.1:27017:27017'
     volumes:
       - mongodb_data:/data/db
+    healthcheck:
+      test: ['CMD', 'mongosh', '--quiet', '--eval', 'db.adminCommand("ping").ok']
+      interval: 5s
+      timeout: 5s
+      retries: 12
 
   server:
-    image: ${DOCKERHUB_NAMESPACE:?DOCKERHUB_NAMESPACE is required}/spendnest-server:${IMAGE_TAG:-latest}
+    image: ${DOCKERHUB_NAMESPACE:-local}/spendnest-server:${IMAGE_TAG:-local}
+    build:
+      context: ./server
     env_file: .env
     environment:
-      MONGO_URI: ${MONGO_URI:-mongodb://mongodb:27017/expense_tracker}
+      MONGO_URI: ${MONGO_URI_DOCKER:-mongodb://mongodb:27017/expense_tracker}
       NODE_ENV: production
       PORT: 5000
     ports:
       - '3042:5000'
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          'fetch("http://127.0.0.1:5000/api/health").then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))',
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
     restart: unless-stopped
 
   client:
-    image: ${DOCKERHUB_NAMESPACE:?DOCKERHUB_NAMESPACE is required}/spendnest-client:${IMAGE_TAG:-latest}
-    env_file: .env
+    image: ${DOCKERHUB_NAMESPACE:-local}/spendnest-client:${IMAGE_TAG:-local}
+    build:
+      context: ./client
+      args:
+        VITE_API_URL: ${VITE_API_URL:-/api}
     ports:
       - '3041:80'
     depends_on:
-      - server
+      server:
+        condition: service_healthy
     restart: unless-stopped
 
 volumes:

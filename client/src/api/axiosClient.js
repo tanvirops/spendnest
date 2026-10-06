@@ -26,11 +26,16 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
-      // Clear invalid token and redirect to login page
+    const response = error.response;
+    const isInvalidToken =
+      response?.data?.code === 'AUTH_TOKEN_INVALID' ||
+      (response?.status === 403 &&
+        response?.data?.message === 'Forbidden: Token expired or invalid');
+
+    if (isInvalidToken) {
       localStorage.removeItem('auth_token');
       if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
+        window.location.replace('/login');
       }
     }
     return Promise.reject(error);
