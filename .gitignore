@@ -4,4 +4,3 @@ config.bat
 /*/dist
 /*/.env
 ./deploy.sh
-.env
