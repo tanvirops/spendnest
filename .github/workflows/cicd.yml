@@ -80,8 +80,9 @@ jobs:
           images: ${{ env.DOCKERHUB_NAMESPACE }}/${{ env.DOCKERHUB_CLIENT_REPOSITORY }}
           tags: |
             type=sha,prefix=sha-,format=long
+            type=semver,pattern={{version}}
             type=raw,value=latest,enable={{is_default_branch}}
-            type=ref,event=tag
+            type=raw,value=latest,enable={{is_tag}}
 
       - name: Extract server image metadata
         id: meta_server
@@ -90,8 +91,9 @@ jobs:
           images: ${{ env.DOCKERHUB_NAMESPACE }}/${{ env.DOCKERHUB_SERVER_REPOSITORY }}
           tags: |
             type=sha,prefix=sha-,format=long
+            type=semver,pattern={{version}}
             type=raw,value=latest,enable={{is_default_branch}}
-            type=ref,event=tag
+            type=raw,value=latest,enable={{is_tag}}
 
       - name: Build and push client image
         uses: docker/build-push-action@v6
