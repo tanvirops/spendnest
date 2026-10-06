@@ -87,7 +87,7 @@ docker image prune -f
 
 ## 5. GitHub Actions flow
 
-After tests pass, GitHub Actions logs in to Docker Hub, builds both images, and pushes the tags. The self-hosted deployment job then fetches the repository's deployment files, sets `IMAGE_TAG` to the current commit SHA, pulls the published images, and starts them without building locally.
+After tests passed, GitHub Actions logs in to Docker Hub, builds both images, and pushes the tags. The self-hosted deployment job then fetches the repository's deployment files, sets `IMAGE_TAG` to the current commit SHA, pulls the published images, and starts them without building locally.
 
 After adding the required secrets and variables, push a three-part `v`-prefixed Git tag to start the release workflow. It waits for both test jobs to pass, then builds and publishes both images with the version number (without the `v` prefix), `latest`, and the immutable commit SHA. A tag push does not deploy to the server; pushes to `main` also publish `latest` and run the deployment job.
 
