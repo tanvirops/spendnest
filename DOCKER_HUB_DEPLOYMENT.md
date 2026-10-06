@@ -77,9 +77,12 @@ From the deployment directory:
 
 ```bash
 docker compose pull
-docker compose up -d --remove-orphans
+docker compose rm --stop --force server client
+docker compose up -d
 docker compose ps
 ```
+
+The deployment script replaces only the API and client containers before starting them, freeing their host ports. It does not remove Compose orphans or volumes, so a previously running MongoDB container and its data are left untouched.
 
 To deploy another release, change only `IMAGE_TAG` to the new `sha-<full-git-sha>` value and run the same commands. To remove unused old images:
 

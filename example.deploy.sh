@@ -11,7 +11,8 @@ run_sudo() {
 
 # 1. Pull and run the immutable Docker images published by CI
 docker compose pull
-docker compose up -d --remove-orphans
+docker compose rm --stop --force server client
+docker compose up -d
 docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
 echo "Docker containers are up and running."
 
