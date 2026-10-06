@@ -1,9 +1,9 @@
-FROM node:20-alpine AS build
+FROM node:20.19-alpine AS build
 WORKDIR /app
 
 # Install deps
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 
 # Copy source and build
 COPY . .

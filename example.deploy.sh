@@ -9,11 +9,18 @@ run_sudo() {
     echo "$SHINE32_PASSWORD" | sudo -S "$@"
 }
 
+<<<<<<< HEAD
+# 1. Pull and run the immutable Docker images published by CI
+docker compose pull
+docker compose up -d --remove-orphans
+docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
+=======
 # 1. Docker Images Build
 docker-compose down || true
 docker-compose build --no-cache
 docker-compose up -d
 docker ps | grep expense-* || true
+>>>>>>> b3b19a4eea946d35988991b2b003825d7ff24ec2
 echo "Docker containers are up and running."
 
 
