@@ -25,9 +25,12 @@ Add these repository secrets:
 ```text
 DOCKERHUB_USERNAME=<your Docker Hub username>
 DOCKERHUB_TOKEN=<Docker Hub access token>
+SHINE32_PASSWORD=<deployment user sudo password>
+EXPENSE_TANVIR_CLOUDFLARE_CERTIFICATE=<Cloudflare origin certificate>
+EXPENSE_TANVIR_CLOUDFLARE_PRIVATE_KEY=<Cloudflare origin private key>
 ```
 
-Create a Docker Hub access token with Read & Write permission. Store the token only as a GitHub secret.
+Create a Docker Hub access token with Read & Write permission. Store all credentials and the Cloudflare private key only as GitHub secrets, not repository variables.
 
 Add this repository variable:
 

@@ -9,18 +9,10 @@ run_sudo() {
     echo "$SHINE32_PASSWORD" | sudo -S "$@"
 }
 
-<<<<<<< HEAD
 # 1. Pull and run the immutable Docker images published by CI
 docker compose pull
 docker compose up -d --remove-orphans
 docker ps --format 'table {{.Names}}\t{{.Image}}\t{{.Status}}'
-=======
-# 1. Docker Images Build
-docker-compose down || true
-docker-compose build --no-cache
-docker-compose up -d
-docker ps | grep expense-* || true
->>>>>>> b3b19a4eea946d35988991b2b003825d7ff24ec2
 echo "Docker containers are up and running."
 
 
@@ -44,7 +36,7 @@ if [ ! -f "$CERT_PATH" ] || [ ! -f "$KEY_PATH" ]; then
     echo "Writing Cloudflare SSL Certificate and Private Key..."
     printf '%s\n' "$CLOUDFLARE_CERT" | run_sudo tee "$CERT_PATH" > /dev/null
     printf '%s\n' "$CLOUDFLARE_KEY" | run_sudo tee "$KEY_PATH" > /dev/null
-    
+
     run_sudo chmod 600 "$KEY_PATH"
     run_sudo chmod 644 "$CERT_PATH"
 else
