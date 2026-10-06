@@ -25,6 +25,9 @@ export default defineConfig({
       manifestFilename: 'site.webmanifest',
     }),
   ],
+  build: {
+    chunkSizeWarningLimit: 1000,
+  },
   server: {
     port: 5173,
     open: true,
