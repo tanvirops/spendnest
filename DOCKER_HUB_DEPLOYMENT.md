@@ -33,8 +33,12 @@ Add this repository variable:
 
 ```text
 DOCKERHUB_NAMESPACE=<your Docker Hub username>
+DOCKERHUB_CLIENT_REPOSITORY=spendnest-client
+DOCKERHUB_SERVER_REPOSITORY=spendnest-server
 EXPENSE_TRACKER_API_URL=/api
 ```
+
+The repository-name variables are optional; the workflow defaults to `spendnest-client` and `spendnest-server`. If you use different names, create those repositories in the same Docker Hub namespace and ensure the deployment Compose configuration uses the same names.
 
 The workflow publishes these tags:
 
@@ -85,12 +89,14 @@ docker image prune -f
 
 After tests pass, GitHub Actions logs in to Docker Hub, builds both images, and pushes the tags. The self-hosted deployment job then fetches the repository's deployment files, sets `IMAGE_TAG` to the current commit SHA, pulls the published images, and starts them without building locally.
 
-For a release version:
+After adding the required secrets and variables, push a three-part `v`-prefixed Git tag to start the release workflow. It waits for both test jobs to pass, then builds and publishes both images with the Git tag and immutable commit SHA. A tag push does not deploy to the server or change `latest`; pushes to `main` publish `latest` and run the deployment job.
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
+
+The workflow accepts tags matching `v*.*.*` (for example, `v1.0.0`). Check the **Actions** tab for the `Publish Docker Images` job, then confirm `DOCKERHUB_NAMESPACE/spendnest-client:v1.0.0` and `DOCKERHUB_NAMESPACE/spendnest-server:v1.0.0` in Docker Hub.
 
 ## 6. Publish manually from a terminal
 
