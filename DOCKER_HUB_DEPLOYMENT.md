@@ -43,8 +43,8 @@ The repository-name variables are optional; the workflow defaults to `spendnest-
 The workflow publishes these tags:
 
 - `sha-<full-git-sha>`: immutable deployment tag used by the server
-- `latest`: updated on pushes to `main`
-- `v1.2.3`: created when a Git tag such as `v1.2.3` is pushed
+- `latest`: updated on pushes to `main` and version-tag pushes
+- `1.2.3`: created when a Git tag such as `v1.2.3` is pushed
 
 ## 3. Prepare the deployment machine
 
@@ -89,14 +89,14 @@ docker image prune -f
 
 After tests pass, GitHub Actions logs in to Docker Hub, builds both images, and pushes the tags. The self-hosted deployment job then fetches the repository's deployment files, sets `IMAGE_TAG` to the current commit SHA, pulls the published images, and starts them without building locally.
 
-After adding the required secrets and variables, push a three-part `v`-prefixed Git tag to start the release workflow. It waits for both test jobs to pass, then builds and publishes both images with the Git tag and immutable commit SHA. A tag push does not deploy to the server or change `latest`; pushes to `main` publish `latest` and run the deployment job.
+After adding the required secrets and variables, push a three-part `v`-prefixed Git tag to start the release workflow. It waits for both test jobs to pass, then builds and publishes both images with the version number (without the `v` prefix), `latest`, and the immutable commit SHA. A tag push does not deploy to the server; pushes to `main` also publish `latest` and run the deployment job.
 
 ```bash
 git tag v1.0.0
 git push origin v1.0.0
 ```
 
-The workflow accepts tags matching `v*.*.*` (for example, `v1.0.0`). Check the **Actions** tab for the `Publish Docker Images` job, then confirm `DOCKERHUB_NAMESPACE/spendnest-client:v1.0.0` and `DOCKERHUB_NAMESPACE/spendnest-server:v1.0.0` in Docker Hub.
+The workflow accepts tags matching `v*.*.*` (for example, `v1.0.0`). Check the **Actions** tab for the `Publish Docker Images` job, then confirm `DOCKERHUB_NAMESPACE/spendnest-client:1.0.0` and `DOCKERHUB_NAMESPACE/spendnest-server:1.0.0` in Docker Hub.
 
 ## 6. Publish manually from a terminal
 
