@@ -48,10 +48,16 @@ GOOGLE_CLIENT_SECRET=your_google_client_secret
 CLIENT_URL=http://localhost:5173
 ```
 
-3. Start MongoDB (if local):
+3. Start only the MongoDB container for local development:
 
 ```bash
-mongod
+docker run -d --name expense-mongodb --restart unless-stopped -p 27017:27017 -v expense-mongodb-data:/data/db mongo:8
+```
+
+This publishes MongoDB on `localhost:27017`, matching the local `MONGO_URI` above, and persists its data in a Docker volume. If the `expense-mongodb` container already exists but is stopped, start it with:
+
+```bash
+docker start expense-mongodb
 ```
 
 ## Running the Server
