@@ -1,3 +1,4 @@
+<img width="1672" height="941" alt="SpendNest Personal Finance Dashboard Hero" src="https://github.com/user-attachments/assets/4435f95d-82d1-4dda-8b56-79acdb561740" />
 # SpendNest
 
 SpendNest is a full-stack personal expense tracker for managing daily spending, budgets, savings, and account profiles.
