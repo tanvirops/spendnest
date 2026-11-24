@@ -1,0 +1,27 @@
+import mongoose from 'mongoose';
+
+const userSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    email: { type: String, required: true, unique: true, lowercase: true, trim: true },
+    password: {
+      type: String,
+      required: function () {
+        return !this.googleId;
+      },
+    },
+    avatar: { type: String, default: '' },
+    googleId: { type: String, default: null },
+    currency: {
+      type: String,
+      enum: ['BDT', 'USD', 'EUR', 'GBP', 'INR'],
+      default: 'BDT',
+      uppercase: true,
+    },
+    isVerified: { type: Boolean, default: false },
+    verificationToken: { type: String, default: null },
+  },
+  { timestamps: true },
+);
+
+export default mongoose.model('User', userSchema);

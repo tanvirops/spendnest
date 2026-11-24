@@ -1,0 +1,80 @@
+@import 'tailwindcss';
+
+@source '../index.html';
+@source './**/*.{js,jsx,ts,tsx}';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-expense-50: #fef2f2;
+  --color-expense-100: #fee2e2;
+  --color-expense-500: #ef4444;
+  --color-expense-600: #dc2626;
+  --color-expense-700: #b91c1c;
+  --color-income-50: #f0fdf4;
+  --color-income-100: #dcfce7;
+  --color-income-500: #22c55e;
+  --color-income-600: #16a34a;
+  --color-income-700: #15803d;
+  --color-budget-50: #fef3c7;
+  --color-budget-100: #fde68a;
+  --color-budget-500: #f59e0b;
+  --color-budget-600: #d97706;
+  --color-budget-700: #b45309;
+  --font-sans: Inter, system-ui, sans-serif;
+  --spacing-128: 32rem;
+}
+
+@layer base {
+  body {
+    @apply bg-slate-50 text-slate-800 antialiased dark:bg-slate-900 dark:text-slate-100 min-h-screen;
+  }
+}
+
+/* PWA Splash Screen Animations */
+@keyframes shimmer {
+  0%,
+  100% {
+    width: 0%;
+  }
+  50% {
+    width: 100%;
+  }
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+  90% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-splash-fadeout {
+  animation: fadeOut 1s ease-out forwards;
+}
+
+.animate-splash-scalein {
+  animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
